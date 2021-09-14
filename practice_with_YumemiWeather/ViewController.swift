@@ -2,18 +2,105 @@
 //  ViewController.swift
 //  practice_with_YumemiWeather
 //
-//  Created by 田野辺開 on 2021/09/13.
+//  Created by Kai Tanobe on 2021/09/13.
 //
 
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    private let imageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "sample_image"))
+        return imageView
+    }()
+    
+    private let leftLabel: UILabel = {
+        let  leftLabel = UILabel()
+        leftLabel.text = "--"
+        leftLabel.textColor = UIColor.blue
+        return leftLabel
+    }()
+    
+    private let rightLabel: UILabel = {
+        let rightLabel = UILabel()
+        rightLabel.text = "--"
+        rightLabel.textColor = UIColor.red
+        return rightLabel
+    }()
+    
+    private let rightButton: UIButton = {
+        let rightButton = UIButton()
+        rightButton.setTitle("Reload", for: UIControl.State.normal)
+        rightButton.setTitleColor(UIColor .blue, for: .normal)
+        return rightButton
+    }()
+    
+    private let leftButton: UIButton = {
+        let leftButton = UIButton()
+        leftButton.setTitle("Close", for: UIControl.State.normal)
+        leftButton.setTitleColor(UIColor .blue, for: .normal)
+        return leftButton
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(imageView)
+        
+        let labelheight = leftLabel.frame.size.height
+        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelheight / 2)).isActive = true
+        //親viewと横方向の中心を同じにする
+        imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        //親viewのサイズの半分に横のサイズを指定する
+        imageView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.5).isActive = true
+        //heightを横幅に合わせる
+        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
+        let imageViewSize = imageView.frame.size.width
+        
+        leftLabel.textAlignment = NSTextAlignment.center
+        leftLabel.font = UIFont.systemFont(ofSize: 8)
+        leftLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(leftLabel)
+        leftLabel.textAlignment = NSTextAlignment.center
+        leftLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
+        leftLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        leftLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
+        
+        rightLabel.textAlignment = NSTextAlignment.center
+        rightLabel.font = UIFont.systemFont(ofSize: 8)
+        rightLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(rightLabel)
+        rightLabel.textAlignment = NSTextAlignment.center
+        rightLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
+        rightLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        rightLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+        
+        leftButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        leftButton.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(leftButton)
+        leftButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        leftButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
+        leftButton.topAnchor.constraint(equalTo: leftLabel.bottomAnchor, constant: 80).isActive = true
+        leftButton.addTarget(self, action: #selector(leftButtonPush), for: .touchUpInside)
+        
+        
+        rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        rightButton.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(rightButton)
+        rightButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        rightButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+        rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
+        rightButton.addTarget(self, action: #selector(rightButtonPush), for: .touchUpInside)
+        
     }
-
-
+    @objc func leftButtonPush(sender: UIButton) {
+        print("close")
+    }
+    
+    @objc func rightButtonPush(sender: UIButton) {
+        print("Reload")
+    }
 }
 
