@@ -66,7 +66,6 @@ class ViewController: UIViewController {
         imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         //親viewのサイズの半分に横のサイズを指定する
         imageView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.5).isActive = true
-        let imageViewSize = imageView.frame.size.width
         
         leftLabel.translatesAutoresizingMaskIntoConstraints = false
         leftLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
