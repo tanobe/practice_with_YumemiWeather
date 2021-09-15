@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     private let leftLabel: UILabel = {
         let  leftLabel = UILabel()
         leftLabel.text = "--"
-        leftLabel.textColor = UIColor.blue
+        leftLabel.textColor = .blue
         leftLabel.textAlignment = NSTextAlignment.center
         leftLabel.font = UIFont.systemFont(ofSize: 8)
         return leftLabel
@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     private let rightLabel: UILabel = {
         let rightLabel = UILabel()
         rightLabel.text = "--"
-        rightLabel.textColor = UIColor.red
+        rightLabel.textColor = .red
         rightLabel.textAlignment = NSTextAlignment.center
         rightLabel.font = UIFont.systemFont(ofSize: 8)
         return rightLabel
