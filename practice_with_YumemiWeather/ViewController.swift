@@ -49,8 +49,8 @@ class ViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(imageView)
         
-        let labelheight = leftLabel.frame.size.height
-        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelheight / 2)).isActive = true
+        let labelHeight = leftLabel.frame.size.height
+        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
         //親viewと横方向の中心を同じにする
         imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         //親viewのサイズの半分に横のサイズを指定する
