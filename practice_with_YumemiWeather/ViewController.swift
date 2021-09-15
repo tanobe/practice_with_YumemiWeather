@@ -61,8 +61,6 @@ class ViewController: UIViewController {
         view.addSubview(leftButton)
         view.addSubview(rightButton)
         
-        let labelHeight = leftLabel.frame.size.height
-        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
         //親viewと横方向の中心を同じにする
         imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         //親viewのサイズの半分に横のサイズを指定する
@@ -78,6 +76,10 @@ class ViewController: UIViewController {
         rightLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
         rightLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         rightLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+        
+        let labelHeight = leftLabel.frame.size.height
+        print(labelHeight)
+        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
         
         leftButton.translatesAutoresizingMaskIntoConstraints = false
         leftButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
