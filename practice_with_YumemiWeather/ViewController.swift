@@ -54,11 +54,11 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(imageView)
-        self.view.addSubview(leftLabel)
-        self.view.addSubview(rightLabel)
-        self.view.addSubview(leftButton)
-        self.view.addSubview(rightButton)
+        view.addSubview(imageView)
+        view.addSubview(leftLabel)
+        view.addSubview(rightLabel)
+        view.addSubview(leftButton)
+        view.addSubview(rightButton)
         
         let labelHeight = leftLabel.frame.size.height
         imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
