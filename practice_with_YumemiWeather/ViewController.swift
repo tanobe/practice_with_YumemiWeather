@@ -21,6 +21,7 @@ class ViewController: UIViewController {
         label.textColor = .blue
         label.textAlignment = NSTextAlignment.center
         label.font = UIFont.systemFont(ofSize: 8)
+        label.frame.size = CGSize(width: 10.0, height: 10.0)
         return label
     }()
     
@@ -30,6 +31,7 @@ class ViewController: UIViewController {
         label.textColor = .red
         label.textAlignment = NSTextAlignment.center
         label.font = UIFont.systemFont(ofSize: 8)
+        label.frame.size = CGSize(width: 10.0, height: 10.0)
         return label
     }()
     
