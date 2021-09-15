@@ -90,11 +90,11 @@ class ViewController: UIViewController {
         rightButton.addTarget(self, action: #selector(rightButtonPushd), for: .touchUpInside)
         
     }
-    @objc func leftButtonPushd(sender: UIButton) {
+    @objc private func leftButtonPushd(sender: UIButton) {
         print("close")
     }
     
-    @objc func rightButtonPushd(sender: UIButton) {
+    @objc private func rightButtonPushd(sender: UIButton) {
         print("Reload")
     }
 }
