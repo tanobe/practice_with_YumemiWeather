@@ -16,37 +16,37 @@ class ViewController: UIViewController {
     }()
     
     private let leftLabel: UILabel = {
-        let  leftLabel = UILabel()
-        leftLabel.text = "--"
-        leftLabel.textColor = .blue
-        leftLabel.textAlignment = NSTextAlignment.center
-        leftLabel.font = UIFont.systemFont(ofSize: 8)
-        return leftLabel
+        let  label = UILabel()
+        label.text = "--"
+        label.textColor = .blue
+        label.textAlignment = NSTextAlignment.center
+        label.font = UIFont.systemFont(ofSize: 8)
+        return label
     }()
     
     private let rightLabel: UILabel = {
-        let rightLabel = UILabel()
-        rightLabel.text = "--"
-        rightLabel.textColor = .red
-        rightLabel.textAlignment = NSTextAlignment.center
-        rightLabel.font = UIFont.systemFont(ofSize: 8)
-        return rightLabel
+        let label = UILabel()
+        label.text = "--"
+        label.textColor = .red
+        label.textAlignment = NSTextAlignment.center
+        label.font = UIFont.systemFont(ofSize: 8)
+        return label
     }()
     
     private let rightButton: UIButton = {
-        let rightButton = UIButton()
-        rightButton.setTitle("Reload", for: UIControl.State.normal)
-        rightButton.setTitleColor(UIColor .blue, for: .normal)
-        rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        return rightButton
+        let button = UIButton()
+        button.setTitle("Reload", for: UIControl.State.normal)
+        button.setTitleColor(UIColor .blue, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        return button
     }()
     
     private let leftButton: UIButton = {
-        let leftButton = UIButton()
-        leftButton.setTitle("Close", for: UIControl.State.normal)
-        leftButton.setTitleColor(UIColor .blue, for: .normal)
-        leftButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        return leftButton
+        let button = UIButton()
+        button.setTitle("Close", for: UIControl.State.normal)
+        button.setTitleColor(UIColor .blue, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        return button
     }()
     
     override func viewDidLoad() {
