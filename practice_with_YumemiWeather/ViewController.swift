@@ -11,6 +11,7 @@ class ViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "sample_image"))
+        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         return imageView
     }()
     
@@ -18,6 +19,8 @@ class ViewController: UIViewController {
         let  leftLabel = UILabel()
         leftLabel.text = "--"
         leftLabel.textColor = UIColor.blue
+        leftLabel.textAlignment = NSTextAlignment.center
+        leftLabel.font = UIFont.systemFont(ofSize: 8)
         return leftLabel
     }()
     
@@ -25,6 +28,8 @@ class ViewController: UIViewController {
         let rightLabel = UILabel()
         rightLabel.text = "--"
         rightLabel.textColor = UIColor.red
+        rightLabel.textAlignment = NSTextAlignment.center
+        rightLabel.font = UIFont.systemFont(ofSize: 8)
         return rightLabel
     }()
     
@@ -32,6 +37,7 @@ class ViewController: UIViewController {
         let rightButton = UIButton()
         rightButton.setTitle("Reload", for: UIControl.State.normal)
         rightButton.setTitleColor(UIColor .blue, for: .normal)
+        rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         return rightButton
     }()
     
@@ -39,6 +45,7 @@ class ViewController: UIViewController {
         let leftButton = UIButton()
         leftButton.setTitle("Close", for: UIControl.State.normal)
         leftButton.setTitleColor(UIColor .blue, for: .normal)
+        leftButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         return leftButton
     }()
     
@@ -55,29 +62,20 @@ class ViewController: UIViewController {
         imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         //親viewのサイズの半分に横のサイズを指定する
         imageView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.5).isActive = true
-        //heightを横幅に合わせる
-        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         let imageViewSize = imageView.frame.size.width
         
-        leftLabel.textAlignment = NSTextAlignment.center
-        leftLabel.font = UIFont.systemFont(ofSize: 8)
         leftLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(leftLabel)
-        leftLabel.textAlignment = NSTextAlignment.center
         leftLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
         leftLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         leftLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
         
-        rightLabel.textAlignment = NSTextAlignment.center
-        rightLabel.font = UIFont.systemFont(ofSize: 8)
         rightLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(rightLabel)
-        rightLabel.textAlignment = NSTextAlignment.center
         rightLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
         rightLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         rightLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         
-        leftButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         leftButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(leftButton)
         leftButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
@@ -85,8 +83,6 @@ class ViewController: UIViewController {
         leftButton.topAnchor.constraint(equalTo: leftLabel.bottomAnchor, constant: 80).isActive = true
         leftButton.addTarget(self, action: #selector(leftButtonPush), for: .touchUpInside)
         
-        
-        rightButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         rightButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(rightButton)
         rightButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
