@@ -83,20 +83,20 @@ class ViewController: UIViewController {
         leftButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         leftButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
         leftButton.topAnchor.constraint(equalTo: leftLabel.bottomAnchor, constant: 80).isActive = true
-        leftButton.addTarget(self, action: #selector(leftButtonPushd), for: .touchUpInside)
+        leftButton.addTarget(self, action: #selector(leftButtonPushed), for: .touchUpInside)
         
         rightButton.translatesAutoresizingMaskIntoConstraints = false
         rightButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         rightButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
-        rightButton.addTarget(self, action: #selector(rightButtonPushd), for: .touchUpInside)
+        rightButton.addTarget(self, action: #selector(rightButtonPushed), for: .touchUpInside)
         
     }
-    @objc private func leftButtonPushd(sender: UIButton) {
+    @objc private func leftButtonPushed(sender: UIButton) {
         print("close")
     }
     
-    @objc private func rightButtonPushd(sender: UIButton) {
+    @objc private func rightButtonPushed(sender: UIButton) {
         print("Reload")
     }
 }
