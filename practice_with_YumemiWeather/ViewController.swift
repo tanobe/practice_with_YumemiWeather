@@ -55,6 +55,10 @@ class ViewController: UIViewController {
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(imageView)
+        self.view.addSubview(leftLabel)
+        self.view.addSubview(rightLabel)
+        self.view.addSubview(leftButton)
+        self.view.addSubview(rightButton)
         
         let labelHeight = leftLabel.frame.size.height
         imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
@@ -65,26 +69,22 @@ class ViewController: UIViewController {
         let imageViewSize = imageView.frame.size.width
         
         leftLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(leftLabel)
         leftLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
         leftLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         leftLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
         
         rightLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(rightLabel)
         rightLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
         rightLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         rightLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         
         leftButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(leftButton)
         leftButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         leftButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
         leftButton.topAnchor.constraint(equalTo: leftLabel.bottomAnchor, constant: 80).isActive = true
         leftButton.addTarget(self, action: #selector(leftButtonPush), for: .touchUpInside)
         
         rightButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(rightButton)
         rightButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         rightButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
