@@ -12,8 +12,10 @@ class ViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let weather = YumemiWeather.fetchWeather()
+        let state = WeatherState(rawValue: weather)
         let imageView = UIImageView(image: UIImage(named: weather))
-        imageView.tintColor = .orange
+        imageView.image = state?.image
+        imageView.tintColor = state?.color
         return imageView
     }()
     
@@ -102,7 +104,8 @@ class ViewController: UIViewController {
     }
     
     @objc private func rightButtonPushed(sender: UIButton) {
-        weatherStateFunc()
+        weatherStateThirdSessionFunc()
+//        weatherStateFunc()
 //        print("Reload")
     }
     
@@ -113,6 +116,23 @@ class ViewController: UIViewController {
         imageView.tintColor = state?.color
         print(weather)
     }
+    
+    func weatherStateThirdSessionFunc() {
+        do {
+            let weather = try YumemiWeather.fetchWeather(at: "tokyo")
+            let state = WeatherState(rawValue: weather)
+            imageView.image = state?.image
+            imageView.tintColor = state?.color
+            print(weather)
+        } catch YumemiWeatherError.invalidParameterError {
+            print("invalidParameterErrorによるエラーです")
+        } catch YumemiWeatherError.unknownError {
+            print("invalidParameterErrorによるエラーです")
+        } catch  {
+            print("その他のエラーです")
+        }
+    }
+
 }
 
 enum WeatherState: String {
