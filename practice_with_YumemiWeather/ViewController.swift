@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import YumemiWeather
 
 class ViewController: UIViewController {
     
     private let imageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "sample_image"))
+        let weather = YumemiWeather.fetchWeather()
+        let imageView = UIImageView(image: UIImage(named: weather))
+        imageView.tintColor = .orange
         return imageView
     }()
     
@@ -99,7 +102,47 @@ class ViewController: UIViewController {
     }
     
     @objc private func rightButtonPushed(sender: UIButton) {
-        print("Reload")
+        weatherStateFunc()
+//        print("Reload")
+    }
+    
+    func weatherStateFunc() {
+        let weather = YumemiWeather.fetchWeather()
+        let state = WeatherState(rawValue: weather)
+        imageView.image = state?.image
+        imageView.tintColor = state?.color
+        print(weather)
     }
 }
 
+enum WeatherState: String {
+    case sunny = "sunny"
+    case rainy = "rainy";
+    case cloudy = "cloudy"
+}
+
+extension WeatherState {
+    var image: UIImage? {
+        switch self {
+        case .sunny:
+            return UIImage(named: "sunny")
+        case .cloudy:
+            return UIImage(named: "cloudy")
+        case .rainy:
+            return UIImage(named: "rainy")
+        }
+    }
+}
+
+extension WeatherState {
+    var color: UIColor {
+        switch self {
+        case .sunny:
+            return .orange
+        case .cloudy:
+            return .gray
+        case .rainy:
+            return .blue
+        }
+    }
+}
