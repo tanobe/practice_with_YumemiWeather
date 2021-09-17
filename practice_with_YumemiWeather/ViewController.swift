@@ -54,13 +54,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
         view.addSubview(leftLabel)
         view.addSubview(rightLabel)
         view.addSubview(leftButton)
         view.addSubview(rightButton)
         
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         //親viewと横方向の中心を同じにする
         imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         //親viewのサイズの半分に横のサイズを指定する
