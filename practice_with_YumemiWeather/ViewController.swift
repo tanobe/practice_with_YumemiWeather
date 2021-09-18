@@ -11,11 +11,12 @@ import YumemiWeather
 class ViewController: UIViewController {
     
     private let imageView: UIImageView = {
-        let weather = YumemiWeather.fetchWeather()
-        let imageView = UIImageView(image: UIImage(named: weather))
-        imageView.tintColor = .orange
-        return imageView
-    }()
+           let weather = YumemiWeather.fetchWeather()
+           let imageView = UIImageView(image: UIImage(named: weather))
+           let state = WeatherState(rawValue: weather)
+           imageView.tintColor = state?.color
+           return imageView
+       }()
     
     private let leftLabel: UILabel = {
         let  label = UILabel()
