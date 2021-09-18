@@ -104,7 +104,6 @@ class ViewController: UIViewController {
     
     @objc private func rightButtonPushed(sender: UIButton) {
         fetchWeatherStateFunc()
-//        print("Reload")
     }
     
     func fetchWeatherStateFunc() {
