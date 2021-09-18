@@ -103,11 +103,11 @@ class ViewController: UIViewController {
     }
     
     @objc private func rightButtonPushed(sender: UIButton) {
-        weatherStateFunc()
+        fetchWeatherStateFunc()
 //        print("Reload")
     }
     
-    func weatherStateFunc() {
+    func fetchWeatherStateFunc() {
         let weather = YumemiWeather.fetchWeather()
         let state = WeatherState(rawValue: weather)
         imageView.image = state?.image
