@@ -140,9 +140,7 @@ extension WeatherState {
             return UIImage(named: "rainy")
         }
     }
-}
-
-extension WeatherState {
+    
     var color: UIColor {
         switch self {
         case .sunny:
