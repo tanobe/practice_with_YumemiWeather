@@ -111,10 +111,10 @@ class ViewController: UIViewController {
     }
     
     @objc private func rightButtonPushed(sender: UIButton) {
-        fetchWeatherStateFunc()
+        updateWeatherImage()
     }
     
-    func fetchWeatherStateFunc() {
+    func updateWeatherImage() {
         let weather = catchWeather().fetchWeather()
         let state = WeatherState(rawValue: weather)
         imageView.image = state?.image
