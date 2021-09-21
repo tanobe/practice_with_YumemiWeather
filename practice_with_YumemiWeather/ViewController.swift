@@ -9,22 +9,9 @@ import UIKit
 import YumemiWeather
 
 
-class catchWeather {
-    func fetchWeather() -> String {
-        let weather = YumemiWeather.fetchWeather()
-        return weather
-    }
-}
-
 class ViewController: UIViewController {
     
-    private let imageView: UIImageView = {
-        let weather = catchWeather().fetchWeather()
-        let imageView = UIImageView(image: UIImage(named: weather))
-        let state = WeatherState(rawValue: weather)
-        imageView.tintColor = state?.color
-        return imageView
-    }()
+    private let imageView: UIImageView = UIImageView()
     
     private let leftLabel: UILabel = {
         let  label = UILabel()
@@ -105,6 +92,7 @@ class ViewController: UIViewController {
         rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
         rightButton.addTarget(self, action: #selector(rightButtonPushed), for: .touchUpInside)
         
+        updateWeatherImage()
     }
     @objc private func leftButtonPushed(sender: UIButton) {
         print("close")
@@ -115,7 +103,7 @@ class ViewController: UIViewController {
     }
     
     func updateWeatherImage() {
-        let weather = catchWeather().fetchWeather()
+        let weather = YumemiWeather.fetchWeather()
         let state = WeatherState(rawValue: weather)
         imageView.image = state?.image
         imageView.tintColor = state?.color
