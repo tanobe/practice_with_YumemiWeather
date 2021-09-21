@@ -8,15 +8,23 @@
 import UIKit
 import YumemiWeather
 
+
+class catchWeather {
+    func fetchWeather() -> String {
+        let weather = YumemiWeather.fetchWeather()
+        return weather
+    }
+}
+
 class ViewController: UIViewController {
     
     private let imageView: UIImageView = {
-           let weather = YumemiWeather.fetchWeather()
-           let imageView = UIImageView(image: UIImage(named: weather))
-           let state = WeatherState(rawValue: weather)
-           imageView.tintColor = state?.color
-           return imageView
-       }()
+        let weather = catchWeather().fetchWeather()
+        let imageView = UIImageView(image: UIImage(named: weather))
+        let state = WeatherState(rawValue: weather)
+        imageView.tintColor = state?.color
+        return imageView
+    }()
     
     private let leftLabel: UILabel = {
         let  label = UILabel()
@@ -107,7 +115,7 @@ class ViewController: UIViewController {
     }
     
     func fetchWeatherStateFunc() {
-        let weather = YumemiWeather.fetchWeather()
+        let weather = catchWeather().fetchWeather()
         let state = WeatherState(rawValue: weather)
         imageView.image = state?.image
         imageView.tintColor = state?.color
