@@ -102,7 +102,7 @@ class ViewController: UIViewController {
         updateWeatherImage()
     }
     
-    func updateWeatherImage() {
+    private func updateWeatherImage() {
         let weather = YumemiWeather.fetchWeather()
         let state = WeatherState(rawValue: weather)
         imageView.image = state?.image
