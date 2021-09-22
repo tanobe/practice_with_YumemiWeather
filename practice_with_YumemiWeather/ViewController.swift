@@ -103,11 +103,19 @@ class ViewController: UIViewController {
     }
     
     private func updateWeatherImage() {
-        let weather = YumemiWeather.fetchWeather()
-        let state = WeatherState(rawValue: weather)
-        imageView.image = state?.image
-        imageView.tintColor = state?.color
-        print(weather)
+        do {
+            let weather = try YumemiWeather.fetchWeather(at: "tokyo")
+            let state = WeatherState(rawValue: weather)
+            imageView.image = state?.image
+            imageView.tintColor = state?.color
+            print(weather)
+        } catch YumemiWeatherError.unknownError {
+            print("unknownError")
+        } catch YumemiWeatherError.invalidParameterError {
+            print("invalidParameterError")
+        } catch {
+            print("その他")
+        }
     }
 }
 
