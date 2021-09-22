@@ -6,13 +6,12 @@
 //
 
 import UIKit
+import YumemiWeather
+
 
 class ViewController: UIViewController {
     
-    private let imageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "sample_image"))
-        return imageView
-    }()
+    private let imageView: UIImageView = UIImageView()
     
     private let leftLabel: UILabel = {
         let  label = UILabel()
@@ -93,13 +92,51 @@ class ViewController: UIViewController {
         rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
         rightButton.addTarget(self, action: #selector(rightButtonPushed), for: .touchUpInside)
         
+        updateWeatherImage()
     }
     @objc private func leftButtonPushed(sender: UIButton) {
         print("close")
     }
     
     @objc private func rightButtonPushed(sender: UIButton) {
-        print("Reload")
+        updateWeatherImage()
+    }
+    
+    private func updateWeatherImage() {
+        let weather = YumemiWeather.fetchWeather()
+        let state = WeatherState(rawValue: weather)
+        imageView.image = state?.image
+        imageView.tintColor = state?.color
+        print(weather)
     }
 }
 
+enum WeatherState: String {
+    case sunny = "sunny"
+    case rainy = "rainy";
+    case cloudy = "cloudy"
+}
+
+extension WeatherState {
+    var image: UIImage? {
+        switch self {
+        case .sunny:
+            return UIImage(named: "sunny")
+        case .cloudy:
+            return UIImage(named: "cloudy")
+        case .rainy:
+            return UIImage(named: "rainy")
+        }
+    }
+    
+    var color: UIColor {
+        switch self {
+        case .sunny:
+            return .orange
+        case .cloudy:
+            return .gray
+        case .rainy:
+            return .blue
+        }
+    }
+}
