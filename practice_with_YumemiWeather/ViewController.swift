@@ -94,7 +94,7 @@ class ViewController: UIViewController {
         
         yumemiAlert.addAction(confirmAction)
         
-        updateWeatherImage()
+        fetchWeather()
     }
     
     @objc private func leftButtonPushed(sender: UIButton) {
@@ -102,7 +102,7 @@ class ViewController: UIViewController {
     }
     
     @objc private func rightButtonPushed(sender: UIButton, forEvent event: UIEvent) {
-        updateWeatherImage()
+        fetchWeather()
     }
     
     
@@ -113,7 +113,7 @@ class ViewController: UIViewController {
     
     
     
-    private func updateWeatherImage() {
+    private func fetchWeather() {
         do {
             let weather = try YumemiWeather.fetchWeather(at: "tokyo")
             let state = WeatherState(rawValue: weather)
