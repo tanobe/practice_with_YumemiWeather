@@ -119,7 +119,6 @@ class ViewController: UIViewController {
             let state = WeatherState(rawValue: weather)
             imageView.image = state?.image
             imageView.tintColor = state?.color
-            print(weather)
         } catch YumemiWeatherError.invalidParameterError {
             print("invalidParameterErrorによるエラーです")
             present(yumemiAlert, animated: true, completion: nil)
