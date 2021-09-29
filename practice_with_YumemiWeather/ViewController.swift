@@ -105,11 +105,9 @@ class ViewController: UIViewController {
     
     
     private func fetchWeather() {
-        let fetchWeatherAlert: UIAlertController = UIAlertController(title: "エラーが発生しました", message: "OKを押してもう一度試してください", preferredStyle: UIAlertController.Style.alert)
         let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{ _ in
             print("OKを押した")
         })
-        fetchWeatherAlert.addAction(confirmAction)
         
         do {
             let weather = try YumemiWeather.fetchWeather(at: "tokyo")
@@ -118,15 +116,23 @@ class ViewController: UIViewController {
             imageView.tintColor = state?.color
         } catch YumemiWeatherError.invalidParameterError {
             print("invalidParameterErrorによるエラーです")
-            present(fetchWeatherAlert, animated: true, completion: nil)
+            showWeatherAlert(title: "invalidParameterErrorによるエラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
+//            present(fetchWeatherAlert, animated: true, completion: nil)
         } catch YumemiWeatherError.unknownError {
             print("unknownErrorによるエラーです")
-            present(fetchWeatherAlert, animated: true, completion: nil)
+            showWeatherAlert(title: "unknownErrorによるエラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
         } catch {
             print("その他のエラーです")
-            present(fetchWeatherAlert, animated: true, completion: nil)
+            showWeatherAlert(title: "エラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
         }
     }
+    
+    private func showWeatherAlert(title: String, message: String, action: [UIAlertAction]) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        action.forEach { alert.addAction($0) }
+        present(alert, animated: true)
+    }
+    
 }
 
 enum WeatherState: String {
