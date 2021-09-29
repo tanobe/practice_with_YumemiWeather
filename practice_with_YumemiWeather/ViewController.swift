@@ -107,8 +107,7 @@ class ViewController: UIViewController {
     
     
     let yumemiAlert: UIAlertController = UIAlertController(title: "エラーが発生しました", message: "OKを押してもう一度試してください", preferredStyle: UIAlertController.Style.alert)
-    let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{
-        (action: UIAlertAction!) -> Void in
+    let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{ _ in
         print("OKを押した")
     })
     
