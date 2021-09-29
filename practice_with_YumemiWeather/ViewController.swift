@@ -114,6 +114,12 @@ class ViewController: UIViewController {
     
     
     private func fetchWeather() {
+        let yumemiAlert: UIAlertController = UIAlertController(title: "エラーが発生しました", message: "OKを押してもう一度試してください", preferredStyle: UIAlertController.Style.alert)
+        let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{ _ in
+            print("OKを押した")
+        })
+        yumemiAlert.addAction(confirmAction)
+        
         do {
             let weather = try YumemiWeather.fetchWeather(at: "tokyo")
             let state = WeatherState(rawValue: weather)
