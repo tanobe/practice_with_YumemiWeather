@@ -90,7 +90,7 @@ class ViewController: UIViewController {
         rightButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         rightButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
-        rightButton.addTarget(self, action: #selector(rightButtonPushed(sender: forEvent:)), for: .touchUpInside)
+        rightButton.addTarget(self, action: #selector(rightButtonPushed), for: .touchUpInside)
         
         yumemiAlert.addAction(confirmAction)
         
