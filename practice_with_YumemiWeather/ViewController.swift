@@ -136,7 +136,7 @@ class ViewController: UIViewController {
 
 enum WeatherState: String {
     case sunny = "sunny"
-    case rainy = "rainy";
+    case rainy = "rainy"
     case cloudy = "cloudy"
 }
 
