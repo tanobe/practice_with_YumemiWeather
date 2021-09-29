@@ -112,8 +112,23 @@ class ViewController: UIViewController {
         let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
         
         do {
-            let weather = try YumemiWeather.fetchWeather(at: "tokyo")
-            updateWeatherImage(weather: WeatherState(rawValue: weather)!)
+//            let areaName: String = "{\"area\":\"tokyo\", \"date\":\"2020-04-01T12:00:00+09:00\"}"
+//            let weather = try YumemiWeather.fetchWeather(at: "tokyo")
+            ///   "area": "tokyo",
+            ///   "date": "2020-04-01T12:00:00+09:00"
+            
+            var jsonDic = Dictionary<String, Any>() // キーString、値AnyのDictionary
+            jsonDic["area"] = "tokyo"
+            jsonDic["date"] = "2020-04-01T12:00:00+09:00"
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonDic)
+            let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+            print(jsonStr)
+            
+            let weather = try YumemiWeather.fetchWeather(jsonStr)
+            let state = WeatherState(rawValue: weather)
+            imageView.image = state?.image
+            imageView.tintColor = state?.color
+            print(weather)
         } catch YumemiWeatherError.invalidParameterError {
             print("invalidParameterErrorによるエラーです")
             showApiErrorAlert(title: "OKを押して下さい", message: "invalidParameterErrorによるエラーです", action: confirmAction)
