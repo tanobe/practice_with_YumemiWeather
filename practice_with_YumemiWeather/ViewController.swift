@@ -91,9 +91,7 @@ class ViewController: UIViewController {
         rightButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
         rightButton.addTarget(self, action: #selector(rightButtonPushed), for: .touchUpInside)
-        
-        yumemiAlert.addAction(confirmAction)
-        
+                
         fetchWeather()
     }
     
@@ -106,19 +104,12 @@ class ViewController: UIViewController {
     }
     
     
-    let yumemiAlert: UIAlertController = UIAlertController(title: "エラーが発生しました", message: "OKを押してもう一度試してください", preferredStyle: UIAlertController.Style.alert)
-    let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{ _ in
-        print("OKを押した")
-    })
-    
-    
-    
     private func fetchWeather() {
-        let yumemiAlert: UIAlertController = UIAlertController(title: "エラーが発生しました", message: "OKを押してもう一度試してください", preferredStyle: UIAlertController.Style.alert)
+        let fetchWeatherAlert: UIAlertController = UIAlertController(title: "エラーが発生しました", message: "OKを押してもう一度試してください", preferredStyle: UIAlertController.Style.alert)
         let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{ _ in
             print("OKを押した")
         })
-        yumemiAlert.addAction(confirmAction)
+        fetchWeatherAlert.addAction(confirmAction)
         
         do {
             let weather = try YumemiWeather.fetchWeather(at: "tokyo")
@@ -127,13 +118,13 @@ class ViewController: UIViewController {
             imageView.tintColor = state?.color
         } catch YumemiWeatherError.invalidParameterError {
             print("invalidParameterErrorによるエラーです")
-            present(yumemiAlert, animated: true, completion: nil)
+            present(fetchWeatherAlert, animated: true, completion: nil)
         } catch YumemiWeatherError.unknownError {
             print("unknownErrorによるエラーです")
-            present(yumemiAlert, animated: true, completion: nil)
+            present(fetchWeatherAlert, animated: true, completion: nil)
         } catch {
             print("その他のエラーです")
-            present(yumemiAlert, animated: true, completion: nil)
+            present(fetchWeatherAlert, animated: true, completion: nil)
         }
     }
 }
