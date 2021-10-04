@@ -111,13 +111,11 @@ class ViewController: UIViewController {
         
         do {
             let weather = try YumemiWeather.fetchWeather(at: "tokyo")
-            let state = WeatherState(rawValue: weather)
-            imageView.image = state?.image
-            imageView.tintColor = state?.color
+            imageView.image = WeatherState(rawValue: weather)?.image
+            imageView.tintColor = WeatherState(rawValue: weather)?.color
         } catch YumemiWeatherError.invalidParameterError {
             print("invalidParameterErrorによるエラーです")
             showWeatherAlert(title: "invalidParameterErrorによるエラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
-//            present(fetchWeatherAlert, animated: true, completion: nil)
         } catch YumemiWeatherError.unknownError {
             print("unknownErrorによるエラーです")
             showWeatherAlert(title: "unknownErrorによるエラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
