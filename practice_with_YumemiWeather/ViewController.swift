@@ -111,8 +111,7 @@ class ViewController: UIViewController {
         
         do {
             let weather = try YumemiWeather.fetchWeather(at: "tokyo")
-            imageView.image = WeatherState(rawValue: weather)?.image
-            imageView.tintColor = WeatherState(rawValue: weather)?.color
+            updateWeatherImage(weather: WeatherState(rawValue: weather)!)
         } catch YumemiWeatherError.invalidParameterError {
             print("invalidParameterErrorによるエラーです")
             apiErrorAlert(title: "invalidParameterErrorによるエラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
@@ -131,6 +130,10 @@ class ViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    private func updateWeatherImage(weather: WeatherState) {
+        imageView.image = weather.image
+        imageView.tintColor = weather.color
+    }
 }
 
 enum WeatherState: String {
