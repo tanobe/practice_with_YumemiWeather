@@ -105,9 +105,7 @@ class ViewController: UIViewController {
     
     
     private func fetchWeather() {
-        let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{ _ in
-            print("OKを押した")
-        })
+        let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
         
         do {
             let weather = try YumemiWeather.fetchWeather(at: "tokyo")
