@@ -99,7 +99,7 @@ class ViewController: UIViewController {
         print("close")
     }
     
-    @objc private func rightButtonPushed(sender: UIButton, forEvent event: UIEvent) {
+    @objc private func rightButtonPushed(sender: UIButton) {
         fetchWeather()
     }
     
