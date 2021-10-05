@@ -115,17 +115,17 @@ class ViewController: UIViewController {
             imageView.tintColor = WeatherState(rawValue: weather)?.color
         } catch YumemiWeatherError.invalidParameterError {
             print("invalidParameterErrorによるエラーです")
-            showWeatherAlert(title: "invalidParameterErrorによるエラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
+            apiErrorAlert(title: "invalidParameterErrorによるエラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
         } catch YumemiWeatherError.unknownError {
             print("unknownErrorによるエラーです")
-            showWeatherAlert(title: "unknownErrorによるエラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
+            apiErrorAlert(title: "unknownErrorによるエラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
         } catch {
             print("その他のエラーです")
-            showWeatherAlert(title: "エラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
+            apiErrorAlert(title: "エラーです", message: "OKを押してもう一度試してください", action: [confirmAction])
         }
     }
     
-    private func showWeatherAlert(title: String, message: String, action: [UIAlertAction]) {
+    private func apiErrorAlert(title: String, message: String, action: [UIAlertAction]) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         action.forEach { alert.addAction($0) }
         present(alert, animated: true)
