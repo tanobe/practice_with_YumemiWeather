@@ -91,29 +91,56 @@ class ViewController: UIViewController {
         rightButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
         rightButton.addTarget(self, action: #selector(rightButtonPushed), for: .touchUpInside)
-        
-        updateWeatherImage()
+       
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        fetchWeather()
+    }
+    
     @objc private func leftButtonPushed(sender: UIButton) {
         print("close")
     }
     
     @objc private func rightButtonPushed(sender: UIButton) {
-        updateWeatherImage()
+        fetchWeather()
     }
     
-    private func updateWeatherImage() {
-        let weather = YumemiWeather.fetchWeather()
-        let state = WeatherState(rawValue: weather)
-        imageView.image = state?.image
-        imageView.tintColor = state?.color
-        print(weather)
+    
+    private func fetchWeather() {
+        let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+        
+        do {
+            let weather = try YumemiWeather.fetchWeather(at: "tokyo")
+            updateWeatherImage(weather: WeatherState(rawValue: weather)!)
+        } catch YumemiWeatherError.invalidParameterError {
+            print("invalidParameterErrorによるエラーです")
+            showApiErrorAlert(title: "OKを押して下さい", message: "invalidParameterErrorによるエラーです", action: confirmAction)
+        } catch YumemiWeatherError.unknownError {
+            print("unknownErrorによるエラーです")
+            showApiErrorAlert(title: "OKを押して下さい", message: "unknownErrorによるエラーです", action: confirmAction)
+        } catch {
+            print("その他のエラーです")
+            showApiErrorAlert(title: "OKを押して下さい", message: "エラーです", action: confirmAction)
+        }
+    }
+    
+    private func showApiErrorAlert(title: String, message: String, action: UIAlertAction) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(action)
+        present(alert, animated: true)
+    }
+    
+    private func updateWeatherImage(weather: WeatherState) {
+        imageView.image = weather.image
+        imageView.tintColor = weather.color
     }
 }
 
 enum WeatherState: String {
     case sunny = "sunny"
-    case rainy = "rainy";
+    case rainy = "rainy"
     case cloudy = "cloudy"
 }
 
