@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct Request: Encodable, Decodable {
+struct Request: Codable {
     var area: String
     var date: String
 }
 
-struct Weather: Decodable {
+struct Weather: Codable {
     var max_temp: Int
     var date: String
     var min_temp: Int
