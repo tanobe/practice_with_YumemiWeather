@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         label.text = "--"
         label.textColor = .blue
         label.textAlignment = NSTextAlignment.center
-        label.font = UIFont.systemFont(ofSize: 8)
+        label.font = UIFont.systemFont(ofSize: 22)
         label.frame.size = CGSize(width: 10.0, height: 10.0)
         return label
     }()
@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         label.text = "--"
         label.textColor = .red
         label.textAlignment = NSTextAlignment.center
-        label.font = UIFont.systemFont(ofSize: 8)
+        label.font = UIFont.systemFont(ofSize: 22)
         label.frame.size = CGSize(width: 10.0, height: 10.0)
         return label
     }()
@@ -91,7 +91,6 @@ class ViewController: UIViewController {
         rightButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
         rightButton.addTarget(self, action: #selector(rightButtonPushed), for: .touchUpInside)
-       
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -112,23 +111,13 @@ class ViewController: UIViewController {
         let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
         
         do {
-//            let areaName: String = "{\"area\":\"tokyo\", \"date\":\"2020-04-01T12:00:00+09:00\"}"
-//            let weather = try YumemiWeather.fetchWeather(at: "tokyo")
-            ///   "area": "tokyo",
-            ///   "date": "2020-04-01T12:00:00+09:00"
+            let respond = try YumemiWeather.fetchWeather(requestJson("tokyo", "2020-04-01T12:00:00+09:00"))
+            let jsonData =  respond.data(using: String.Encoding.utf8)!
+            let weathers = try JSONDecoder().decode(Weather.self, from: jsonData)
             
-            var jsonDic = Dictionary<String, Any>() // キーString、値AnyのDictionary
-            jsonDic["area"] = "tokyo"
-            jsonDic["date"] = "2020-04-01T12:00:00+09:00"
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonDic)
-            let jsonStr = String(bytes: jsonData, encoding: .utf8)!
-            print(jsonStr)
-            
-            let weather = try YumemiWeather.fetchWeather(jsonStr)
-            let state = WeatherState(rawValue: weather)
-            imageView.image = state?.image
-            imageView.tintColor = state?.color
-            print(weather)
+            updateWeatherImage(weather: WeatherState(rawValue: weathers.weather)!)
+            updateMaxTemp(weathers: weathers)
+            updateMinTemp(weathers: weathers)
         } catch YumemiWeatherError.invalidParameterError {
             print("invalidParameterErrorによるエラーです")
             showApiErrorAlert(title: "OKを押して下さい", message: "invalidParameterErrorによるエラーです", action: confirmAction)
@@ -150,6 +139,24 @@ class ViewController: UIViewController {
     private func updateWeatherImage(weather: WeatherState) {
         imageView.image = weather.image
         imageView.tintColor = weather.color
+    }
+    
+    private func updateMaxTemp(weathers: Weather) {
+        rightLabel.text = String(weathers.max_temp)
+    }
+    
+    private func updateMinTemp(weathers: Weather) {
+        leftLabel.text = String(weathers.min_temp)
+    }
+    
+    private func requestJson(_ area: String, _ date: String) -> String {
+        let originalObject = Request(area: area, date: date)
+        let encoder = JSONEncoder()
+        guard let jsonValue = try? encoder.encode(originalObject) else {
+            fatalError("Failed to encode to JSON.")
+        }
+        let jsonString = String(bytes: jsonValue, encoding: .utf8)!
+        return jsonString
     }
 }
 
