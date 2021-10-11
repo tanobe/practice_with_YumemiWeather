@@ -113,7 +113,9 @@ class ViewController: UIViewController {
         do {
             let respond = try YumemiWeather.fetchWeather(requestJson("tokyo", "2020-04-01T12:00:00+09:00"))
             let jsonData =  respond.data(using: String.Encoding.utf8)!
-            let weathers = try JSONDecoder().decode(Weather.self, from: jsonData)
+            let jsonDecoder = JSONDecoder()
+            jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+            let weathers = try jsonDecoder.decode(Weather.self, from: jsonData)
             
             updateWeatherImage(weather: WeatherState(rawValue: weathers.weather)!)
             updateTemp(weathers: weathers)
@@ -141,8 +143,8 @@ class ViewController: UIViewController {
     }
     
     private func updateTemp(weathers: Weather) {
-        maxTempLabel.text = String(weathers.max_temp)
-        miniTempLabel.text = String(weathers.min_temp)
+        maxTempLabel.text = String(weathers.maxTemp)
+        miniTempLabel.text = String(weathers.minTemp)
     }
     
     private func requestJson(_ area: String, _ date: String) -> String {
