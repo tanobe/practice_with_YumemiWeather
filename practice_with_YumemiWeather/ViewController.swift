@@ -116,8 +116,7 @@ class ViewController: UIViewController {
             let weathers = try JSONDecoder().decode(Weather.self, from: jsonData)
             
             updateWeatherImage(weather: WeatherState(rawValue: weathers.weather)!)
-            updateMaxTemp(weathers: weathers)
-            updateMinTemp(weathers: weathers)
+            updateTemp(weathers: weathers)
         } catch YumemiWeatherError.invalidParameterError {
             print("invalidParameterErrorによるエラーです")
             showApiErrorAlert(title: "OKを押して下さい", message: "invalidParameterErrorによるエラーです", action: confirmAction)
@@ -141,11 +140,8 @@ class ViewController: UIViewController {
         imageView.tintColor = weather.color
     }
     
-    private func updateMaxTemp(weathers: Weather) {
+    private func updateTemp(weathers: Weather) {
         maxTempLabel.text = String(weathers.max_temp)
-    }
-    
-    private func updateMinTemp(weathers: Weather) {
         miniTempLabel.text = String(weathers.min_temp)
     }
     
