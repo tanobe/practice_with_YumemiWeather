@@ -53,6 +53,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        view.backgroundColor = .white
+        
         view.addSubview(imageView)
         view.addSubview(miniTempLabel)
         view.addSubview(maxTempLabel)
