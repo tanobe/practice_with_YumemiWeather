@@ -111,7 +111,8 @@ class ViewController: UIViewController {
         let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
         
         do {
-            let respond = try YumemiWeather.fetchWeather(requestJson(Request.init(area: "tokyo", date: getNowTime())))
+            let nowTime = getNowTime()
+            let respond = try YumemiWeather.fetchWeather(requestJson("tokyo", nowTime))
             let jsonData =  respond.data(using: String.Encoding.utf8)!
             let jsonDecoder = JSONDecoder()
             jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -147,11 +148,11 @@ class ViewController: UIViewController {
         miniTempLabel.text = String(weathers.minTemp)
     }
     
-    private func requestJson(_ request : Request) -> String {
-        let stringDate = stringFromDate(request.date)
-        let reString = jsonRequest(jsonArea: request.area, jsonDate: stringDate)
+    private func requestJson(_ area: String, _ date: Date) -> String {
+        let request = Request(area: area, date: date)
         let encoder = JSONEncoder()
-        guard let jsonValue = try? encoder.encode(reString) else {
+        encoder.dateEncodingStrategy = .iso8601
+        guard let jsonValue = try? encoder.encode(request) else {
             fatalError("Failed to encode to JSON.")
         }
         let jsonString = String(data: jsonValue, encoding: .utf8)!
@@ -161,12 +162,6 @@ class ViewController: UIViewController {
     private func getNowTime() -> Date {
         return  Date()
     }
-    
-    private func stringFromDate(_ time: Date) -> String {
-        let formatter = ISO8601DateFormatter()
-        return formatter.string(from: time)
-    }
-    
 }
 
 enum WeatherState: String {
