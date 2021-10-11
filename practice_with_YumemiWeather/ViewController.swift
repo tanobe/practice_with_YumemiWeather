@@ -146,9 +146,9 @@ class ViewController: UIViewController {
     }
     
     private func requestJson(_ area: String, _ date: String) -> String {
-        let originalObject = Request(area: area, date: date)
+        let request = Request(area: area, date: date)
         let encoder = JSONEncoder()
-        guard let jsonValue = try? encoder.encode(originalObject) else {
+        guard let jsonValue = try? encoder.encode(request) else {
             fatalError("Failed to encode to JSON.")
         }
         let jsonString = String(data: jsonValue, encoding: .utf8)!
