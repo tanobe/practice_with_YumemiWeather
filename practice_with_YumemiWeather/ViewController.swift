@@ -151,7 +151,7 @@ class ViewController: UIViewController {
         guard let jsonValue = try? encoder.encode(originalObject) else {
             fatalError("Failed to encode to JSON.")
         }
-        let jsonString = String(bytes: jsonValue, encoding: .utf8)!
+        let jsonString = String(data: jsonValue, encoding: .utf8)!
         return jsonString
     }
 }
