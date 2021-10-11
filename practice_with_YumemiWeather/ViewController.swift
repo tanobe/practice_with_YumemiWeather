@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     
     private let imageView: UIImageView = UIImageView()
     
-    private let leftLabel: UILabel = {
+    private let miniTempLabel: UILabel = {
         let  label = UILabel()
         label.text = "--"
         label.textColor = .blue
@@ -23,7 +23,7 @@ class ViewController: UIViewController {
         return label
     }()
     
-    private let rightLabel: UILabel = {
+    private let maxTempLabel: UILabel = {
         let label = UILabel()
         label.text = "--"
         label.textColor = .red
@@ -33,7 +33,7 @@ class ViewController: UIViewController {
         return label
     }()
     
-    private let rightButton: UIButton = {
+    private let reloadButton: UIButton = {
         let button = UIButton()
         button.setTitle("Reload", for: UIControl.State.normal)
         button.setTitleColor(UIColor .blue, for: .normal)
@@ -41,7 +41,7 @@ class ViewController: UIViewController {
         return button
     }()
     
-    private let leftButton: UIButton = {
+    private let closeButton: UIButton = {
         let button = UIButton()
         button.setTitle("Close", for: UIControl.State.normal)
         button.setTitleColor(UIColor .blue, for: .normal)
@@ -54,10 +54,10 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         view.addSubview(imageView)
-        view.addSubview(leftLabel)
-        view.addSubview(rightLabel)
-        view.addSubview(leftButton)
-        view.addSubview(rightButton)
+        view.addSubview(miniTempLabel)
+        view.addSubview(maxTempLabel)
+        view.addSubview(closeButton)
+        view.addSubview(reloadButton)
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
         //親viewと横方向の中心を同じにする
@@ -66,31 +66,31 @@ class ViewController: UIViewController {
         imageView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.5).isActive = true
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         
-        leftLabel.translatesAutoresizingMaskIntoConstraints = false
-        leftLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
-        leftLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        leftLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
+        miniTempLabel.translatesAutoresizingMaskIntoConstraints = false
+        miniTempLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
+        miniTempLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        miniTempLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
         
-        rightLabel.translatesAutoresizingMaskIntoConstraints = false
-        rightLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
-        rightLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        rightLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+        maxTempLabel.translatesAutoresizingMaskIntoConstraints = false
+        maxTempLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
+        maxTempLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        maxTempLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         
-        let labelHeight = leftLabel.frame.size.height
+        let labelHeight = miniTempLabel.frame.size.height
         print(labelHeight)
         imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
         
-        leftButton.translatesAutoresizingMaskIntoConstraints = false
-        leftButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        leftButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
-        leftButton.topAnchor.constraint(equalTo: leftLabel.bottomAnchor, constant: 80).isActive = true
-        leftButton.addTarget(self, action: #selector(leftButtonPushed), for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        closeButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
+        closeButton.topAnchor.constraint(equalTo: miniTempLabel.bottomAnchor, constant: 80).isActive = true
+        closeButton.addTarget(self, action: #selector(closeButtonPushed), for: .touchUpInside)
         
-        rightButton.translatesAutoresizingMaskIntoConstraints = false
-        rightButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        rightButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
-        rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
-        rightButton.addTarget(self, action: #selector(rightButtonPushed), for: .touchUpInside)
+        reloadButton.translatesAutoresizingMaskIntoConstraints = false
+        reloadButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        reloadButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+        reloadButton.topAnchor.constraint(equalTo: maxTempLabel.bottomAnchor, constant: 80).isActive = true
+        reloadButton.addTarget(self, action: #selector(reloadButtonPushed), for: .touchUpInside)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -98,11 +98,11 @@ class ViewController: UIViewController {
         fetchWeather()
     }
     
-    @objc private func leftButtonPushed(sender: UIButton) {
+    @objc private func closeButtonPushed(sender: UIButton) {
         print("close")
     }
     
-    @objc private func rightButtonPushed(sender: UIButton) {
+    @objc private func reloadButtonPushed(sender: UIButton) {
         fetchWeather()
     }
     
@@ -142,11 +142,11 @@ class ViewController: UIViewController {
     }
     
     private func updateMaxTemp(weathers: Weather) {
-        rightLabel.text = String(weathers.max_temp)
+        maxTempLabel.text = String(weathers.max_temp)
     }
     
     private func updateMinTemp(weathers: Weather) {
-        leftLabel.text = String(weathers.min_temp)
+        miniTempLabel.text = String(weathers.min_temp)
     }
     
     private func requestJson(_ area: String, _ date: String) -> String {
