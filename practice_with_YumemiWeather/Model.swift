@@ -19,14 +19,3 @@ struct Weather: Codable {
     var weather: String
 }
 
-
-struct jsonRequest: Codable {
-    var jsonArea: String
-    var jsonDate: String
-    
-    
-    enum CodingKeys: String, CodingKey {
-        case jsonArea = "area"
-        case jsonDate = "date"
-    }
-}
