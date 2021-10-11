@@ -9,7 +9,7 @@ import Foundation
 
 struct Request: Codable {
     var area: String
-    var date: String
+    var date: Date
 }
 
 struct Weather: Codable {
@@ -19,3 +19,14 @@ struct Weather: Codable {
     var weather: String
 }
 
+
+struct jsonRequest: Codable {
+    var jsonArea: String
+    var jsonDate: String
+    
+    
+    enum CodingKeys: String, CodingKey {
+        case jsonArea = "area"
+        case jsonDate = "date"
+    }
+}
