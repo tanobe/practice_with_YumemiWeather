@@ -111,8 +111,7 @@ class ViewController: UIViewController {
         let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
         
         do {
-            let nowTime = getNowTime()
-            let respond = try YumemiWeather.fetchWeather(requestJson("tokyo", nowTime))
+            let respond = try YumemiWeather.fetchWeather(requestJson("tokyo", Date()))
             let jsonData =  respond.data(using: String.Encoding.utf8)!
             let jsonDecoder = JSONDecoder()
             jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -157,10 +156,6 @@ class ViewController: UIViewController {
         }
         let jsonString = String(data: jsonValue, encoding: .utf8)!
         return jsonString
-    }
-    
-    private func getNowTime() -> Date {
-        return  Date()
     }
 }
 
