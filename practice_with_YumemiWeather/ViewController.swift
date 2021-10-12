@@ -111,20 +111,28 @@ class ViewController: UIViewController {
         let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
         
         do {
-            let respond = try YumemiWeather.fetchWeather(requestJson("tokyo", Date()))
-            let jsonData =  respond.data(using: String.Encoding.utf8)!
-            let jsonDecoder = JSONDecoder()
-            jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-            let weathers = try jsonDecoder.decode(Weather.self, from: jsonData)
-            
-            updateWeatherImage(weather: WeatherState(rawValue: weathers.weather)!)
-            updateTemp(weathers: weathers)
-        } catch YumemiWeatherError.invalidParameterError {
-            print("invalidParameterErrorによるエラーです")
-            showApiErrorAlert(title: "OKを押して下さい", message: "invalidParameterErrorによるエラーです", action: confirmAction)
-        } catch YumemiWeatherError.unknownError {
-            print("unknownErrorによるエラーです")
-            showApiErrorAlert(title: "OKを押して下さい", message: "unknownErrorによるエラーです", action: confirmAction)
+            let requestJson = try requestJson("tokyo", Date())
+            do {
+                let respond = try YumemiWeather.fetchWeather(requestJson)
+                let jsonData =  respond.data(using: String.Encoding.utf8)!
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                let weathers = try jsonDecoder.decode(Weather.self, from: jsonData)
+                
+                updateWeatherImage(weather: WeatherState(rawValue: weathers.weather)!)
+                updateTemp(weathers: weathers)
+            } catch YumemiWeatherError.invalidParameterError {
+                print("invalidParameterErrorによるエラーです")
+                showApiErrorAlert(title: "OKを押して下さい", message: "invalidParameterErrorによるエラーです", action: confirmAction)
+            } catch YumemiWeatherError.unknownError {
+                print("unknownErrorによるエラーです")
+                showApiErrorAlert(title: "OKを押して下さい", message: "unknownErrorによるエラーです", action: confirmAction)
+            } catch {
+                print("その他のエラーです")
+                showApiErrorAlert(title: "OKを押して下さい", message: "エラーです", action: confirmAction)
+            }
+        } catch JsonConvertError.encodeError{
+            showApiErrorAlert(title: "OKを押して下さい", message: "エンコードの失敗によるエラーです", action: confirmAction)
         } catch {
             print("その他のエラーです")
             showApiErrorAlert(title: "OKを押して下さい", message: "エラーです", action: confirmAction)
@@ -147,12 +155,12 @@ class ViewController: UIViewController {
         miniTempLabel.text = String(weathers.minTemp)
     }
     
-    private func requestJson(_ area: String, _ date: Date) -> String {
+    private func requestJson(_ area: String, _ date: Date) throws -> String {
         let request = Request(area: area, date: date)
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         guard let jsonValue = try? encoder.encode(request) else {
-            fatalError("Failed to encode to JSON.")
+            throw JsonConvertError.encodeError
         }
         let jsonString = String(data: jsonValue, encoding: .utf8)!
         return jsonString
@@ -185,6 +193,22 @@ extension WeatherState {
             return .gray
         case .rainy:
             return .blue
+        }
+    }
+}
+
+enum JsonConvertError: Error {
+    case encodeError
+    case decodeError
+}
+
+extension JsonConvertError {
+    var errorContent: String {
+        switch self {
+        case .encodeError:
+            return "エンコードにによる失敗です。"
+        case .decodeError:
+            return "デコードによる失敗です。"
         }
     }
 }
