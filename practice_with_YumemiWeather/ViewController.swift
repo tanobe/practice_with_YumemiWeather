@@ -95,7 +95,7 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        fetchWeather()
+        handleWeather(result: fetchWeather())
     }
     
     @objc private func closeButtonPushed(sender: UIButton) {
@@ -103,41 +103,26 @@ class ViewController: UIViewController {
     }
     
     @objc private func reloadButtonPushed(sender: UIButton) {
-        fetchWeather()
+        handleWeather(result: fetchWeather())
     }
     
+    private func fetchWeather() -> Result<Weather, WeatherErrors> {
+         do {
+             let weathers = try requestJson("tokyo", Date())
+             let weather = try YumemiWeather.fetchWeather(weathers)
+             let response = try response(from: weather)
+            return .success(response)
+             
+         } catch YumemiWeatherError.invalidParameterError {
+             return .failure(.invalid)
+         } catch YumemiWeatherError.unknownError {
+             return .failure(.unknown)
+         } catch {
+             return .failure(.other)
+         }
+     }
     
-    private func fetchWeather() {
-        let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
-        
-        do {
-            let requestJson = try requestJson("tokyo", Date())
-            do {
-                let respond = try YumemiWeather.fetchWeather(requestJson)
-                let jsonData =  respond.data(using: String.Encoding.utf8)!
-                let jsonDecoder = JSONDecoder()
-                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-                let weathers = try jsonDecoder.decode(Weather.self, from: jsonData)
-                
-                updateWeatherImage(weather: WeatherState(rawValue: weathers.weather)!)
-                updateTemp(weathers: weathers)
-            } catch YumemiWeatherError.invalidParameterError {
-                print("invalidParameterErrorによるエラーです")
-                showApiErrorAlert(title: "OKを押して下さい", message: "invalidParameterErrorによるエラーです", action: confirmAction)
-            } catch YumemiWeatherError.unknownError {
-                print("unknownErrorによるエラーです")
-                showApiErrorAlert(title: "OKを押して下さい", message: "unknownErrorによるエラーです", action: confirmAction)
-            } catch {
-                print("その他のエラーです")
-                showApiErrorAlert(title: "OKを押して下さい", message: "エラーです", action: confirmAction)
-            }
-        } catch JsonConvertError.encodeError{
-            showApiErrorAlert(title: "OKを押して下さい", message: "エンコードの失敗によるエラーです", action: confirmAction)
-        } catch {
-            print("その他のエラーです")
-            showApiErrorAlert(title: "OKを押して下さい", message: "エラーです", action: confirmAction)
-        }
-    }
+    
     
     private func showApiErrorAlert(title: String, message: String, action: UIAlertAction) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -150,9 +135,9 @@ class ViewController: UIViewController {
         imageView.tintColor = weather.color
     }
     
-    private func updateTemp(weathers: Weather) {
-        maxTempLabel.text = String(weathers.maxTemp)
-        miniTempLabel.text = String(weathers.minTemp)
+    private func updateTemp(weather: Weather) {
+        maxTempLabel.text = String(weather.maxTemp)
+        miniTempLabel.text = String(weather.minTemp)
     }
     
     private func requestJson(_ area: String, _ date: Date) throws -> String {
@@ -160,10 +145,31 @@ class ViewController: UIViewController {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         guard let jsonValue = try? encoder.encode(request) else {
-            throw JsonConvertError.encodeError
+            throw WeatherErrors.ecodeError
         }
         let jsonString = String(data: jsonValue, encoding: .utf8)!
         return jsonString
+    }
+    
+    private func response(from jsonString: String) throws -> Weather {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let jsonData = jsonString.data(using: .utf8)!
+        guard let jsonData = try? decoder.decode(Weather.self,from: jsonData) else {
+            throw WeatherErrors.decodeError
+        }
+        return jsonData
+    }
+    
+    private func handleWeather(result: Result<Weather, WeatherErrors>) {
+        switch result {
+        case let .success(weather):
+            updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
+            updateTemp(weather: weather)
+        case let .failure(error):
+            let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            showApiErrorAlert(title: "Error", message: error.message, action: confirmAction)
+        }
     }
 }
 
@@ -193,22 +199,6 @@ extension WeatherState {
             return .gray
         case .rainy:
             return .blue
-        }
-    }
-}
-
-enum JsonConvertError: Error {
-    case encodeError
-    case decodeError
-}
-
-extension JsonConvertError {
-    var errorContent: String {
-        switch self {
-        case .encodeError:
-            return "エンコードにによる失敗です。"
-        case .decodeError:
-            return "デコードによる失敗です。"
         }
     }
 }
