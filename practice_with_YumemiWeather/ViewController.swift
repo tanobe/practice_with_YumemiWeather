@@ -106,14 +106,14 @@ class ViewController: UIViewController {
         handleWeather(result: fetchWeather())
     }
     
-    private func fetchWeather() -> Result<Weather, WeatherErrors> {
+    private func fetchWeather() -> Result<Weather, WeatherError> {
          do {
              guard let weathers = try? requestJson("tokyo", Date()) else {
-                 throw WeatherErrors.decodeError
+                 throw WeatherError.decodeError
              }
              let weather = try YumemiWeather.fetchWeather(weathers)
              guard let response = try? response(from: weather) else {
-                 throw WeatherErrors.ecodeError
+                 throw WeatherError.ecodeError
              }
             return .success(response)
              
@@ -161,7 +161,7 @@ class ViewController: UIViewController {
         return jsonData
     }
 
-    private func handleWeather(result: Result<Weather, WeatherErrors>) {
+    private func handleWeather(result: Result<Weather, WeatherError>) {
         switch result {
         case let .success(weather):
             updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
