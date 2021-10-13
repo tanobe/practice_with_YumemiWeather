@@ -19,3 +19,28 @@ struct Weather: Codable {
     var weather: String
 }
 
+enum WeatherErrors: Error{
+    case invalid
+    case unknown
+    case ecodeError
+    case decodeError
+    case other
+}
+
+
+extension WeatherErrors {
+    var message: String {
+        switch self {
+        case .invalid:
+            return "invalidParameterErrorによるエラーです。"
+        case .unknown:
+            return "invalidParameterErrorによるエラーです。"
+        case .ecodeError:
+            return "ecodeErrorによるエラーです。"
+        case .decodeError:
+            return "decodeErrorによるエラーです。"
+        case .other:
+            return "その他によるエラーです。"
+        }
+    }
+}
