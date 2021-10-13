@@ -108,9 +108,13 @@ class ViewController: UIViewController {
     
     private func fetchWeather() -> Result<Weather, WeatherErrors> {
          do {
-             let weathers = try requestJson("tokyo", Date())
+             guard let weathers = try? requestJson("tokyo", Date()) else {
+                 throw WeatherErrors.decodeError
+             }
              let weather = try YumemiWeather.fetchWeather(weathers)
-             let response = try response(from: weather)
+             guard let response = try? response(from: weather) else {
+                 throw WeatherErrors.ecodeError
+             }
             return .success(response)
              
          } catch YumemiWeatherError.invalidParameterError {
@@ -144,9 +148,7 @@ class ViewController: UIViewController {
         let request = Request(area: area, date: date)
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
-        guard let jsonValue = try? encoder.encode(request) else {
-            throw WeatherErrors.ecodeError
-        }
+        let jsonValue = try! encoder.encode(request)
         let jsonString = String(data: jsonValue, encoding: .utf8)!
         return jsonString
     }
@@ -154,13 +156,11 @@ class ViewController: UIViewController {
     private func response(from jsonString: String) throws -> Weather {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let jsonData = jsonString.data(using: .utf8)!
-        guard let jsonData = try? decoder.decode(Weather.self,from: jsonData) else {
-            throw WeatherErrors.decodeError
-        }
+        let json = jsonString.data(using: .utf8)!
+        let jsonData = try! decoder.decode(Weather.self,from: json)
         return jsonData
     }
-    
+
     private func handleWeather(result: Result<Weather, WeatherErrors>) {
         switch result {
         case let .success(weather):
