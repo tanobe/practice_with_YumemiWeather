@@ -108,12 +108,12 @@ class ViewController: UIViewController {
     
     private func fetchWeather() -> Result<Weather, WeatherError> {
          do {
-             guard let weathers = try? requestJson("tokyo", Date()) else {
-                 throw WeatherError.decodeError
+             guard let weathers = requestJson("tokyo", Date()) else {
+                 return .failure(WeatherError.ecodeError)
              }
              let weather = try YumemiWeather.fetchWeather(weathers)
-             guard let response = try? response(from: weather) else {
-                 throw WeatherError.ecodeError
+             guard let response = response(from: weather) else {
+                 return .failure(WeatherError.decodeError)
              }
             return .success(response)
              
@@ -144,7 +144,7 @@ class ViewController: UIViewController {
         miniTempLabel.text = String(weather.minTemp)
     }
     
-    private func requestJson(_ area: String, _ date: Date) throws -> String {
+    private func requestJson(_ area: String, _ date: Date) -> String? {
         let request = Request(area: area, date: date)
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
@@ -153,7 +153,7 @@ class ViewController: UIViewController {
         return jsonString
     }
     
-    private func response(from jsonString: String) throws -> Weather {
+    private func response(from jsonString: String) -> Weather? {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let json = jsonString.data(using: .utf8)!
