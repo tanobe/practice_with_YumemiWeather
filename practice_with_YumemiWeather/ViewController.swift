@@ -108,11 +108,11 @@ class ViewController: UIViewController {
     
     private func fetchWeather() -> Result<Weather, WeatherError> {
          do {
-             guard let weathers = requestJson("tokyo", Date()) else {
+             guard let requestJson = try? request("tokyo", Date()) else {
                  return .failure(WeatherError.ecodeError)
              }
-             let weather = try YumemiWeather.fetchWeather(weathers)
-             guard let response = response(from: weather) else {
+             let weather = try YumemiWeather.fetchWeather(requestJson)
+             guard let response = try? response(from: weather) else {
                  return .failure(WeatherError.decodeError)
              }
             return .success(response)
@@ -125,8 +125,6 @@ class ViewController: UIViewController {
              return .failure(.other)
          }
      }
-    
-    
     
     private func showApiErrorAlert(title: String, message: String, action: UIAlertAction) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -144,23 +142,27 @@ class ViewController: UIViewController {
         miniTempLabel.text = String(weather.minTemp)
     }
     
-    private func requestJson(_ area: String, _ date: Date) -> String? {
+    private func request(_ area: String, _ date: Date) throws -> String {
         let request = Request(area: area, date: date)
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
-        let jsonValue = try! encoder.encode(request)
+        guard let jsonValue = try? encoder.encode(request) else {
+            throw WeatherError.ecodeError
+        }
         let jsonString = String(data: jsonValue, encoding: .utf8)!
         return jsonString
     }
-    
-    private func response(from jsonString: String) -> Weather? {
+
+    private func response(from jsonString: String) throws -> Weather {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let json = jsonString.data(using: .utf8)!
-        let jsonData = try! decoder.decode(Weather.self,from: json)
+        guard let jsonData = try? decoder.decode(Weather.self,from: json) else {
+            throw WeatherError.decodeError
+        }
         return jsonData
     }
-
+    
     private func handleWeather(result: Result<Weather, WeatherError>) {
         switch result {
         case let .success(weather):
