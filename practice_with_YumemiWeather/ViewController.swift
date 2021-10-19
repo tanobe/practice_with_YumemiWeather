@@ -109,7 +109,7 @@ class ViewController: UIViewController {
     private func fetchWeather() -> Result<Weather, WeatherError> {
          do {
              guard let requestJson = try? request("tokyo", Date()) else {
-                 return .failure(WeatherError.ecodeError)
+                 return .failure(WeatherError.encodeError)
              }
              let weather = try YumemiWeather.fetchWeather(requestJson)
              guard let response = try? response(from: weather) else {
@@ -147,7 +147,7 @@ class ViewController: UIViewController {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         guard let jsonValue = try? encoder.encode(request) else {
-            throw WeatherError.ecodeError
+            throw WeatherError.encodeError
         }
         let jsonString = String(data: jsonValue, encoding: .utf8)!
         return jsonString
