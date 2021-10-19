@@ -78,10 +78,6 @@ class WeatherViewController: UIViewController {
         maxTempLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         maxTempLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         
-        let labelHeight = miniTempLabel.frame.size.height
-        print(labelHeight)
-        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
-        
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         closeButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
         closeButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
@@ -99,7 +95,12 @@ class WeatherViewController: UIViewController {
         super.viewDidAppear(animated)
         handleWeather(result: fetchWeather())
     }
-     
+    
+    override func viewDidLayoutSubviews() {
+        let labelHeight = miniTempLabel.frame.size.height
+        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
+    }
+    
     @objc private func closeButtonPushed(sender: UIButton) {
         print("close")
         self.dismiss(animated: true, completion: nil)
@@ -110,24 +111,24 @@ class WeatherViewController: UIViewController {
     }
     
     private func fetchWeather() -> Result<Weather, WeatherError> {
-         do {
-             guard let requestJson = try? request("tokyo", Date()) else {
-                 return .failure(WeatherError.encodeError)
-             }
-             let weather = try YumemiWeather.fetchWeather(requestJson)
-             guard let response = try? response(from: weather) else {
-                 return .failure(WeatherError.decodeError)
-             }
+        do {
+            guard let requestJson = try? request("tokyo", Date()) else {
+                return .failure(WeatherError.encodeError)
+            }
+            let weather = try YumemiWeather.fetchWeather(requestJson)
+            guard let response = try? response(from: weather) else {
+                return .failure(WeatherError.decodeError)
+            }
             return .success(response)
-             
-         } catch YumemiWeatherError.invalidParameterError {
-             return .failure(.invalid)
-         } catch YumemiWeatherError.unknownError {
-             return .failure(.unknown)
-         } catch {
-             return .failure(.other)
-         }
-     }
+            
+        } catch YumemiWeatherError.invalidParameterError {
+            return .failure(.invalid)
+        } catch YumemiWeatherError.unknownError {
+            return .failure(.unknown)
+        } catch {
+            return .failure(.other)
+        }
+    }
     
     private func showApiErrorAlert(title: String, message: String, action: UIAlertAction) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
