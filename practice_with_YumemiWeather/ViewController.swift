@@ -9,7 +9,7 @@ import UIKit
 import YumemiWeather
 
 
-class ViewController: UIViewController {
+class WeatherViewController: UIViewController {
     
     private let imageView: UIImageView = UIImageView()
     
@@ -99,9 +99,10 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
         handleWeather(result: fetchWeather())
     }
-    
+     
     @objc private func closeButtonPushed(sender: UIButton) {
         print("close")
+        self.dismiss(animated: true, completion: nil)
     }
     
     @objc private func reloadButtonPushed(sender: UIButton) {
