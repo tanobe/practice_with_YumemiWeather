@@ -22,7 +22,7 @@ struct Weather: Codable {
 enum WeatherError: Error {
     case invalid
     case unknown
-    case ecodeError
+    case encodeError
     case decodeError
     case other
 }
@@ -35,7 +35,7 @@ extension WeatherError {
             return "invalidParameterErrorによるエラーです。"
         case .unknown:
             return "invalidParameterErrorによるエラーです。"
-        case .ecodeError:
+        case .encodeError:
             return "ecodeErrorによるエラーです。"
         case .decodeError:
             return "decodeErrorによるエラーです。"
