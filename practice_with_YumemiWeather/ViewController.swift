@@ -13,27 +13,27 @@ class ViewController: UIViewController {
     
     private let imageView: UIImageView = UIImageView()
     
-    private let leftLabel: UILabel = {
+    private let miniTempLabel: UILabel = {
         let  label = UILabel()
         label.text = "--"
         label.textColor = .blue
         label.textAlignment = NSTextAlignment.center
-        label.font = UIFont.systemFont(ofSize: 8)
+        label.font = UIFont.systemFont(ofSize: 22)
         label.frame.size = CGSize(width: 10.0, height: 10.0)
         return label
     }()
     
-    private let rightLabel: UILabel = {
+    private let maxTempLabel: UILabel = {
         let label = UILabel()
         label.text = "--"
         label.textColor = .red
         label.textAlignment = NSTextAlignment.center
-        label.font = UIFont.systemFont(ofSize: 8)
+        label.font = UIFont.systemFont(ofSize: 22)
         label.frame.size = CGSize(width: 10.0, height: 10.0)
         return label
     }()
     
-    private let rightButton: UIButton = {
+    private let reloadButton: UIButton = {
         let button = UIButton()
         button.setTitle("Reload", for: UIControl.State.normal)
         button.setTitleColor(UIColor .blue, for: .normal)
@@ -41,7 +41,7 @@ class ViewController: UIViewController {
         return button
     }()
     
-    private let leftButton: UIButton = {
+    private let closeButton: UIButton = {
         let button = UIButton()
         button.setTitle("Close", for: UIControl.State.normal)
         button.setTitleColor(UIColor .blue, for: .normal)
@@ -54,10 +54,10 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         view.addSubview(imageView)
-        view.addSubview(leftLabel)
-        view.addSubview(rightLabel)
-        view.addSubview(leftButton)
-        view.addSubview(rightButton)
+        view.addSubview(miniTempLabel)
+        view.addSubview(maxTempLabel)
+        view.addSubview(closeButton)
+        view.addSubview(reloadButton)
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
         //親viewと横方向の中心を同じにする
@@ -66,65 +66,65 @@ class ViewController: UIViewController {
         imageView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.5).isActive = true
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         
-        leftLabel.translatesAutoresizingMaskIntoConstraints = false
-        leftLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
-        leftLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        leftLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
+        miniTempLabel.translatesAutoresizingMaskIntoConstraints = false
+        miniTempLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
+        miniTempLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        miniTempLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
         
-        rightLabel.translatesAutoresizingMaskIntoConstraints = false
-        rightLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
-        rightLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        rightLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+        maxTempLabel.translatesAutoresizingMaskIntoConstraints = false
+        maxTempLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
+        maxTempLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        maxTempLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         
-        let labelHeight = leftLabel.frame.size.height
+        let labelHeight = miniTempLabel.frame.size.height
         print(labelHeight)
         imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
         
-        leftButton.translatesAutoresizingMaskIntoConstraints = false
-        leftButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        leftButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
-        leftButton.topAnchor.constraint(equalTo: leftLabel.bottomAnchor, constant: 80).isActive = true
-        leftButton.addTarget(self, action: #selector(leftButtonPushed), for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        closeButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
+        closeButton.topAnchor.constraint(equalTo: miniTempLabel.bottomAnchor, constant: 80).isActive = true
+        closeButton.addTarget(self, action: #selector(closeButtonPushed), for: .touchUpInside)
         
-        rightButton.translatesAutoresizingMaskIntoConstraints = false
-        rightButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        rightButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
-        rightButton.topAnchor.constraint(equalTo: rightLabel.bottomAnchor, constant: 80).isActive = true
-        rightButton.addTarget(self, action: #selector(rightButtonPushed), for: .touchUpInside)
-       
+        reloadButton.translatesAutoresizingMaskIntoConstraints = false
+        reloadButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
+        reloadButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+        reloadButton.topAnchor.constraint(equalTo: maxTempLabel.bottomAnchor, constant: 80).isActive = true
+        reloadButton.addTarget(self, action: #selector(reloadButtonPushed), for: .touchUpInside)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        fetchWeather()
+        handleWeather(result: fetchWeather())
     }
     
-    @objc private func leftButtonPushed(sender: UIButton) {
+    @objc private func closeButtonPushed(sender: UIButton) {
         print("close")
     }
     
-    @objc private func rightButtonPushed(sender: UIButton) {
-        fetchWeather()
+    @objc private func reloadButtonPushed(sender: UIButton) {
+        handleWeather(result: fetchWeather())
     }
     
-    
-    private func fetchWeather() {
-        let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
-        
-        do {
-            let weather = try YumemiWeather.fetchWeather(at: "tokyo")
-            updateWeatherImage(weather: WeatherState(rawValue: weather)!)
-        } catch YumemiWeatherError.invalidParameterError {
-            print("invalidParameterErrorによるエラーです")
-            showApiErrorAlert(title: "OKを押して下さい", message: "invalidParameterErrorによるエラーです", action: confirmAction)
-        } catch YumemiWeatherError.unknownError {
-            print("unknownErrorによるエラーです")
-            showApiErrorAlert(title: "OKを押して下さい", message: "unknownErrorによるエラーです", action: confirmAction)
-        } catch {
-            print("その他のエラーです")
-            showApiErrorAlert(title: "OKを押して下さい", message: "エラーです", action: confirmAction)
-        }
-    }
+    private func fetchWeather() -> Result<Weather, WeatherError> {
+         do {
+             guard let requestJson = try? request("tokyo", Date()) else {
+                 return .failure(WeatherError.encodeError)
+             }
+             let weather = try YumemiWeather.fetchWeather(requestJson)
+             guard let response = try? response(from: weather) else {
+                 return .failure(WeatherError.decodeError)
+             }
+            return .success(response)
+             
+         } catch YumemiWeatherError.invalidParameterError {
+             return .failure(.invalid)
+         } catch YumemiWeatherError.unknownError {
+             return .failure(.unknown)
+         } catch {
+             return .failure(.other)
+         }
+     }
     
     private func showApiErrorAlert(title: String, message: String, action: UIAlertAction) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -135,6 +135,43 @@ class ViewController: UIViewController {
     private func updateWeatherImage(weather: WeatherState) {
         imageView.image = weather.image
         imageView.tintColor = weather.color
+    }
+    
+    private func updateTemp(weather: Weather) {
+        maxTempLabel.text = String(weather.maxTemp)
+        miniTempLabel.text = String(weather.minTemp)
+    }
+    
+    private func request(_ area: String, _ date: Date) throws -> String {
+        let request = Request(area: area, date: date)
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        guard let jsonValue = try? encoder.encode(request) else {
+            throw WeatherError.encodeError
+        }
+        let jsonString = String(data: jsonValue, encoding: .utf8)!
+        return jsonString
+    }
+
+    private func response(from jsonString: String) throws -> Weather {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let json = jsonString.data(using: .utf8)!
+        guard let jsonData = try? decoder.decode(Weather.self,from: json) else {
+            throw WeatherError.decodeError
+        }
+        return jsonData
+    }
+    
+    private func handleWeather(result: Result<Weather, WeatherError>) {
+        switch result {
+        case let .success(weather):
+            updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
+            updateTemp(weather: weather)
+        case let .failure(error):
+            let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            showApiErrorAlert(title: "Error", message: error.message, action: confirmAction)
+        }
     }
 }
 
