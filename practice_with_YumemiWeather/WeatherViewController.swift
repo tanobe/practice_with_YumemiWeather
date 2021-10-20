@@ -89,6 +89,8 @@ class WeatherViewController: UIViewController {
         reloadButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
         reloadButton.topAnchor.constraint(equalTo: maxTempLabel.bottomAnchor, constant: 80).isActive = true
         reloadButton.addTarget(self, action: #selector(reloadButtonPushed), for: .touchUpInside)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadButtonPushed), name: .notifyName, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
