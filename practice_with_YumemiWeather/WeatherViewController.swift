@@ -19,7 +19,6 @@ class WeatherViewController: UIViewController {
         label.textColor = .blue
         label.textAlignment = NSTextAlignment.center
         label.font = UIFont.systemFont(ofSize: 22)
-        label.frame.size = CGSize(width: 10.0, height: 10.0)
         return label
     }()
     
@@ -29,7 +28,6 @@ class WeatherViewController: UIViewController {
         label.textColor = .red
         label.textAlignment = NSTextAlignment.center
         label.font = UIFont.systemFont(ofSize: 22)
-        label.frame.size = CGSize(width: 10.0, height: 10.0)
         return label
     }()
     
@@ -56,11 +54,11 @@ class WeatherViewController: UIViewController {
         view.backgroundColor = .white
         
         let container = UIView()
+        container.addSubview(imageView)
+        container.addSubview(miniTempLabel)
+        container.addSubview(maxTempLabel)
         
         view.addSubview(container)
-        view.addSubview(imageView)
-        view.addSubview(miniTempLabel)
-        view.addSubview(maxTempLabel)
         view.addSubview(closeButton)
         view.addSubview(reloadButton)
         
