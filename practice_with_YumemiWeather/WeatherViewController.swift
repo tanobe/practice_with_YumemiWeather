@@ -104,7 +104,6 @@ class WeatherViewController: UIViewController {
     }
     
     @objc private func closeButtonPushed(sender: UIButton) {
-        print("close")
         self.dismiss(animated: true, completion: nil)
     }
     
