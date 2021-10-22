@@ -9,14 +9,6 @@ import UIKit
 
 class RootViewController: UIViewController {
     
-    private let closeButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Close", for: UIControl.State.normal)
-        button.setTitleColor(UIColor .blue, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 30)
-        return button
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
