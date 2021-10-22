@@ -15,7 +15,6 @@
 		B297935B26EF550F00B1FE82 /* YumemiWeather in Frameworks */ = {isa = PBXBuildFile; productRef = B297935A26EF550F00B1FE82 /* YumemiWeather */; };
 		B2AB54CA270D9ABF001E31E5 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AB54C9270D9ABF001E31E5 /* Model.swift */; };
 		B2AB54D42719A440001E31E5 /* RooteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AB54D32719A440001E31E5 /* RooteViewController.swift */; };
-		B2EDF0E0271EDF6800B157A4 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EDF0DF271EDF6800B157A4 /* Utility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +27,6 @@
 		B297935326EF515D00B1FE82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B2AB54C9270D9ABF001E31E5 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		B2AB54D32719A440001E31E5 /* RooteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RooteViewController.swift; sourceTree = "<group>"; };
-		B2EDF0DF271EDF6800B157A4 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +64,6 @@
 				B297934726EF515A00B1FE82 /* SceneDelegate.swift */,
 				B297934926EF515A00B1FE82 /* WeatherViewController.swift */,
 				B2AB54D32719A440001E31E5 /* RooteViewController.swift */,
-				B2EDF0DF271EDF6800B157A4 /* Utility.swift */,
 				B2AB54C9270D9ABF001E31E5 /* Model.swift */,
 				B297934E26EF515D00B1FE82 /* Assets.xcassets */,
 				B297935026EF515D00B1FE82 /* LaunchScreen.storyboard */,
@@ -152,7 +149,6 @@
 			files = (
 				B297934A26EF515A00B1FE82 /* WeatherViewController.swift in Sources */,
 				B297934626EF515A00B1FE82 /* AppDelegate.swift in Sources */,
-				B2EDF0E0271EDF6800B157A4 /* Utility.swift in Sources */,
 				B297934826EF515A00B1FE82 /* SceneDelegate.swift in Sources */,
 				B2AB54CA270D9ABF001E31E5 /* Model.swift in Sources */,
 				B2AB54D42719A440001E31E5 /* RooteViewController.swift in Sources */,
