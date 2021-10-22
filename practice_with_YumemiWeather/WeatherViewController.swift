@@ -55,39 +55,48 @@ class WeatherViewController: UIViewController {
         
         view.backgroundColor = .white
         
+        let container = UIView()
+        
+        view.addSubview(container)
         view.addSubview(imageView)
         view.addSubview(miniTempLabel)
         view.addSubview(maxTempLabel)
         view.addSubview(closeButton)
         view.addSubview(reloadButton)
         
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        container.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        container.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        //親viewと横方向の中心を同じにする
-        imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        //親viewのサイズの半分に横のサイズを指定する
-        imageView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.5).isActive = true
+        imageView.topAnchor.constraint(equalTo: container.topAnchor).isActive = true
+        imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor).isActive = true
+        imageView.trailingAnchor.constraint(equalTo: container.trailingAnchor).isActive = true
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         
         miniTempLabel.translatesAutoresizingMaskIntoConstraints = false
         miniTempLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
-        miniTempLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        miniTempLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
+        miniTempLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor).isActive = true
+        miniTempLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor).isActive = true
         
         maxTempLabel.translatesAutoresizingMaskIntoConstraints = false
         maxTempLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
-        maxTempLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        maxTempLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+        maxTempLabel.leadingAnchor.constraint(equalTo: miniTempLabel.trailingAnchor).isActive = true
+        maxTempLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor).isActive = true
+        maxTempLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor).isActive = true
+        maxTempLabel.widthAnchor.constraint(equalTo: miniTempLabel.widthAnchor).isActive = true
         
         closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        closeButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
-        closeButton.topAnchor.constraint(equalTo: miniTempLabel.bottomAnchor, constant: 80).isActive = true
+        closeButton.topAnchor.constraint(equalTo: container.bottomAnchor, constant: 80).isActive = true
+        closeButton.leadingAnchor.constraint(equalTo: container.leadingAnchor).isActive = true
         closeButton.addTarget(self, action: #selector(closeButtonPushed), for: .touchUpInside)
         
         reloadButton.translatesAutoresizingMaskIntoConstraints = false
-        reloadButton.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.5).isActive = true
-        reloadButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
-        reloadButton.topAnchor.constraint(equalTo: maxTempLabel.bottomAnchor, constant: 80).isActive = true
+        reloadButton.topAnchor.constraint(equalTo: container.bottomAnchor, constant: 80).isActive = true
+        reloadButton.trailingAnchor.constraint(equalTo: container.trailingAnchor).isActive = true
+        reloadButton.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor).isActive = true
+        reloadButton.widthAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
         reloadButton.addTarget(self, action: #selector(reloadButtonPushed), for: .touchUpInside)
         
         NotificationCenter.default.addObserver(self, selector: #selector(reloadButtonPushed), name: .notifyName, object: nil)
@@ -96,11 +105,6 @@ class WeatherViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         handleWeather(result: fetchWeather())
-    }
-    
-    override func viewDidLayoutSubviews() {
-        let labelHeight = miniTempLabel.frame.size.height
-        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -(labelHeight / 2)).isActive = true
     }
     
     @objc private func closeButtonPushed(sender: UIButton) {
