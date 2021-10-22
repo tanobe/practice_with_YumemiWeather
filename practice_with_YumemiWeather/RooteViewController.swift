@@ -23,11 +23,6 @@ class RootViewController: UIViewController {
         view.backgroundColor = .black
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.dismiss(animated: true, completion: nil)
-        print("viewWillAppearが呼ばれたよ")
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
