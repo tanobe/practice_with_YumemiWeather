@@ -99,8 +99,8 @@ class WeatherViewController: UIViewController {
         
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
                                                object: nil,
-                                               queue: nil){ _ in
-            self.handleWeather(result: self.fetchWeather())
+                                               queue: nil){ [weak self] notification in
+            self!.handleWeather(result: self!.fetchWeather())
         }
     }
     
