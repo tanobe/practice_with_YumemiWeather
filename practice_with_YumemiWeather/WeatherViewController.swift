@@ -96,6 +96,15 @@ class WeatherViewController: UIViewController {
         reloadButton.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor).isActive = true
         reloadButton.widthAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
         reloadButton.addTarget(self, action: #selector(reloadButtonPushed), for: .touchUpInside)
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
+                                               object: nil,
+                                               queue: nil){ [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.handleWeather(result: self.fetchWeather())
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
