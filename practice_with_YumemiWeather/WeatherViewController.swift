@@ -47,6 +47,8 @@ class WeatherViewController: UIViewController {
         return button
     }()
     
+    private let activityIndicator = UIActivityIndicatorView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -54,11 +56,13 @@ class WeatherViewController: UIViewController {
         view.backgroundColor = .white
         
         let container = UIView()
+
         container.addSubview(imageView)
         container.addSubview(miniTempLabel)
         container.addSubview(maxTempLabel)
         
         view.addSubview(container)
+        view.addSubview(activityIndicator)
         view.addSubview(closeButton)
         view.addSubview(reloadButton)
         
@@ -97,6 +101,12 @@ class WeatherViewController: UIViewController {
         reloadButton.widthAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
         reloadButton.addTarget(self, action: #selector(reloadButtonPushed), for: .touchUpInside)
         
+        let x = self.view.frame.size.width / 2
+        let y = self.view.frame.size.height / 2 + 150
+        activityIndicator.frame = CGRect(x: x, y: y, width: 0.0, height: 0.0)
+        activityIndicator.style = .large
+        activityIndicator.color = .purple
+        
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
                                                object: nil,
                                                queue: nil){ [weak self] _ in
@@ -117,7 +127,14 @@ class WeatherViewController: UIViewController {
     }
     
     @objc private func reloadButtonPushed(sender: UIButton) {
-        handleWeather(result: fetchWeather())
+        activityIndicator.startAnimating()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.handleWeather(result: self.fetchWeather())
+            self.activityIndicator.stopAnimating()
+        }
     }
     
     private func fetchWeather() -> Result<Weather, WeatherError> {
@@ -125,7 +142,7 @@ class WeatherViewController: UIViewController {
             guard let requestJson = try? request("tokyo", Date()) else {
                 return .failure(WeatherError.encodeError)
             }
-            let weather = try YumemiWeather.fetchWeather(requestJson)
+            let weather = try YumemiWeather.syncFetchWeather(requestJson)
             guard let response = try? response(from: weather) else {
                 return .failure(WeatherError.decodeError)
             }
