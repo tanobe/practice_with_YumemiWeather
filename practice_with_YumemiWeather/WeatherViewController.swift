@@ -47,7 +47,12 @@ class WeatherViewController: UIViewController {
         return button
     }()
     
-    private let activityIndicator = UIActivityIndicatorView()
+    private let activityIndicator: UIActivityIndicatorView = {
+       let inidecator = UIActivityIndicatorView()
+        inidecator.style = .large
+        inidecator.color = .purple
+        return inidecator
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,8 +109,6 @@ class WeatherViewController: UIViewController {
         let x = self.view.frame.size.width / 2
         let y = self.view.frame.size.height / 2 + 150
         activityIndicator.frame = CGRect(x: x, y: y, width: 0.0, height: 0.0)
-        activityIndicator.style = .large
-        activityIndicator.color = .purple
         
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
                                                object: nil,
@@ -113,13 +116,29 @@ class WeatherViewController: UIViewController {
             guard let self = self else {
                 return
             }
+            self.activityIndicator.stopAnimating()
             self.handleWeather(result: self.fetchWeather())
+        }
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification,
+                                               object: nil,
+                                               queue: nil){ [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.activityIndicator.startAnimating()
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        handleWeather(result: fetchWeather())
+        activityIndicator.startAnimating()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.activityIndicator.stopAnimating()
+            self.handleWeather(result: self.fetchWeather())
+        }
     }
     
     @objc private func closeButtonPushed(sender: UIButton) {
@@ -132,8 +151,8 @@ class WeatherViewController: UIViewController {
             guard let self = self else {
                 return
             }
-            self.handleWeather(result: self.fetchWeather())
             self.activityIndicator.stopAnimating()
+            self.handleWeather(result: self.fetchWeather())
         }
     }
     
@@ -183,7 +202,7 @@ class WeatherViewController: UIViewController {
         let jsonString = String(data: jsonValue, encoding: .utf8)!
         return jsonString
     }
-
+    
     private func response(from jsonString: String) throws -> Weather {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
