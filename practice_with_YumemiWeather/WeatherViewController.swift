@@ -48,7 +48,7 @@ class WeatherViewController: UIViewController {
     }()
     
     private let activityIndicator: UIActivityIndicatorView = {
-       let inidecator = UIActivityIndicatorView()
+        let inidecator = UIActivityIndicatorView()
         inidecator.style = .large
         inidecator.color = .purple
         return inidecator
@@ -106,39 +106,32 @@ class WeatherViewController: UIViewController {
         reloadButton.widthAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
         reloadButton.addTarget(self, action: #selector(reloadButtonPushed), for: .touchUpInside)
         
-        let x = self.view.frame.size.width / 2
-        let y = self.view.frame.size.height / 2 + 150
-        activityIndicator.frame = CGRect(x: x, y: y, width: 0.0, height: 0.0)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.topAnchor.constraint(equalTo: container.bottomAnchor, constant: 10).isActive = true
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
-                                               object: nil,
-                                               queue: nil){ [weak self] _ in
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        let notify = NotificationCenter.default
+        notify.addObserver(forName: UIApplication.didBecomeActiveNotification,
+                                   object: nil,
+                                   queue: nil){ [weak self] _ in
             guard let self = self else {
                 return
             }
-            self.activityIndicator.stopAnimating()
-            self.handleWeather(result: self.fetchWeather())
-        }
-        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification,
-                                               object: nil,
-                                               queue: nil){ [weak self] _ in
-            guard let self = self else {
-                return
-            }
-            self.activityIndicator.startAnimating()
+            self.loadingView()
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        activityIndicator.startAnimating()
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            self.activityIndicator.stopAnimating()
-            self.handleWeather(result: self.fetchWeather())
-        }
+        loadingView()
     }
     
     @objc private func closeButtonPushed(sender: UIButton) {
@@ -146,14 +139,7 @@ class WeatherViewController: UIViewController {
     }
     
     @objc private func reloadButtonPushed(sender: UIButton) {
-        activityIndicator.startAnimating()
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            self.activityIndicator.stopAnimating()
-            self.handleWeather(result: self.fetchWeather())
-        }
+        loadingView()
     }
     
     private func fetchWeather() -> Result<Weather, WeatherError> {
@@ -173,6 +159,20 @@ class WeatherViewController: UIViewController {
             return .failure(.unknown)
         } catch {
             return .failure(.other)
+        }
+    }
+    
+    private func loadingView() {
+        self.activityIndicator.startAnimating()
+        DispatchQueue.global(priority: .default).async {
+            let fetchResult = self.fetchWeather()
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.activityIndicator.stopAnimating()
+                self.handleWeather(result: fetchResult)
+            }
         }
     }
     
