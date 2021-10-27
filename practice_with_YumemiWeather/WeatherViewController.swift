@@ -47,6 +47,13 @@ class WeatherViewController: UIViewController {
         return button
     }()
     
+    private let activityIndicator: UIActivityIndicatorView = {
+        let inidecator = UIActivityIndicatorView()
+        inidecator.style = .large
+        inidecator.color = .purple
+        return inidecator
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -54,11 +61,13 @@ class WeatherViewController: UIViewController {
         view.backgroundColor = .white
         
         let container = UIView()
+
         container.addSubview(imageView)
         container.addSubview(miniTempLabel)
         container.addSubview(maxTempLabel)
         
         view.addSubview(container)
+        view.addSubview(activityIndicator)
         view.addSubview(closeButton)
         view.addSubview(reloadButton)
         
@@ -97,19 +106,31 @@ class WeatherViewController: UIViewController {
         reloadButton.widthAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
         reloadButton.addTarget(self, action: #selector(reloadButtonPushed), for: .touchUpInside)
         
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.topAnchor.constraint(equalTo: container.bottomAnchor, constant: 10).isActive = true
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
                                                object: nil,
-                                               queue: nil){ [weak self] _ in
+                                               queue: nil) { [weak self] _ in
             guard let self = self else {
                 return
             }
-            self.handleWeather(result: self.fetchWeather())
+            self.loadWeather()
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        handleWeather(result: fetchWeather())
+        loadWeather()
     }
     
     @objc private func closeButtonPushed(sender: UIButton) {
@@ -117,7 +138,7 @@ class WeatherViewController: UIViewController {
     }
     
     @objc private func reloadButtonPushed(sender: UIButton) {
-        handleWeather(result: fetchWeather())
+        loadWeather()
     }
     
     private func fetchWeather() -> Result<Weather, WeatherError> {
@@ -125,7 +146,7 @@ class WeatherViewController: UIViewController {
             guard let requestJson = try? request("tokyo", Date()) else {
                 return .failure(WeatherError.encodeError)
             }
-            let weather = try YumemiWeather.fetchWeather(requestJson)
+            let weather = try YumemiWeather.syncFetchWeather(requestJson)
             guard let response = try? response(from: weather) else {
                 return .failure(WeatherError.decodeError)
             }
@@ -137,6 +158,20 @@ class WeatherViewController: UIViewController {
             return .failure(.unknown)
         } catch {
             return .failure(.other)
+        }
+    }
+    
+    private func loadWeather() {
+        self.activityIndicator.startAnimating()
+        DispatchQueue.global(priority: .default).async {
+            let fetchResult = self.fetchWeather()
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.activityIndicator.stopAnimating()
+                self.handleWeather(result: fetchResult)
+            }
         }
     }
     
@@ -166,7 +201,7 @@ class WeatherViewController: UIViewController {
         let jsonString = String(data: jsonValue, encoding: .utf8)!
         return jsonString
     }
-
+    
     private func response(from jsonString: String) throws -> Weather {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase

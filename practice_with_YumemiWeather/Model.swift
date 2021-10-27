@@ -34,7 +34,7 @@ extension WeatherError {
         case .invalid:
             return "invalidParameterErrorによるエラーです。"
         case .unknown:
-            return "invalidParameterErrorによるエラーです。"
+            return "unknownParameterErrorによるエラーです。"
         case .encodeError:
             return "ecodeErrorによるエラーです。"
         case .decodeError:
