@@ -120,18 +120,18 @@ class WeatherViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         let notify = NotificationCenter.default
         notify.addObserver(forName: UIApplication.didBecomeActiveNotification,
-                                   object: nil,
-                                   queue: nil){ [weak self] _ in
+                           object: nil,
+                           queue: nil) { [weak self] _ in
             guard let self = self else {
                 return
             }
-            self.loadingView()
+            self.loadWeather()
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        loadingView()
+        loadWeather()
     }
     
     @objc private func closeButtonPushed(sender: UIButton) {
@@ -139,7 +139,7 @@ class WeatherViewController: UIViewController {
     }
     
     @objc private func reloadButtonPushed(sender: UIButton) {
-        loadingView()
+        loadWeather()
     }
     
     private func fetchWeather() -> Result<Weather, WeatherError> {
@@ -162,7 +162,7 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    private func loadingView() {
+    private func loadWeather() {
         self.activityIndicator.startAnimating()
         DispatchQueue.global(priority: .default).async {
             let fetchResult = self.fetchWeather()
