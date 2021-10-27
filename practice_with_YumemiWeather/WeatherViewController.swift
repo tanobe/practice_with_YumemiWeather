@@ -118,10 +118,9 @@ class WeatherViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        let notify = NotificationCenter.default
-        notify.addObserver(forName: UIApplication.didBecomeActiveNotification,
-                           object: nil,
-                           queue: nil) { [weak self] _ in
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
+                                               object: nil,
+                                               queue: nil) { [weak self] _ in
             guard let self = self else {
                 return
             }
