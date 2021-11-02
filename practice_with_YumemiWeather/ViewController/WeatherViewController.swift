@@ -165,18 +165,18 @@ class WeatherViewController: UIViewController {
 }
 
 extension WeatherViewController: WeatherViewDelegate {
-    func didFetchWeathershowApiErrorAlert(title: String, message: String, action: UIAlertAction) {
+    func didLoadWeatherShowApiErrorAlert(title: String, message: String, action: UIAlertAction) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(action)
         present(alert, animated: true)
     }
     
-    func didFetchWeatherupdateWeatherImage(weather: WeatherState) {
+    func didLoadWeatherUpdateWeatherImage(weather: WeatherState) {
         imageView.image = weather.image
         imageView.tintColor = weather.color
     }
     
-    func didFetchWeatherUpdateTemp(weather: Weather) {
+    func didLoadWeatherUpdateTemp(weather: Weather) {
         maxTempLabel.text = String(weather.maxTemp)
         miniTempLabel.text = String(weather.minTemp)
     }
