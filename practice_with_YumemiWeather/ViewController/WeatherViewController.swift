@@ -181,3 +181,27 @@ extension WeatherViewController: WeatherViewDelegate {
         miniTempLabel.text = String(weather.minTemp)
     }
 }
+
+extension WeatherState {
+    var image: UIImage? {
+        switch self {
+        case .sunny:
+            return UIImage(named: "sunny")
+        case .cloudy:
+            return UIImage(named: "cloudy")
+        case .rainy:
+            return UIImage(named: "rainy")
+        }
+    }
+    
+    var color: UIColor {
+        switch self {
+        case .sunny:
+            return .orange
+        case .cloudy:
+            return .gray
+        case .rainy:
+            return .blue
+        }
+    }
+}
