@@ -14,6 +14,7 @@ protocol WeatherViewDelegate: AnyObject {
     func didLoadWeatherUpdateTemp(weather: Weather)
     func didLoadWeatherShowApiErrorAlert(title: String, message: String, action: UIAlertAction)
     func didLoadWeatherUpdateWeatherImage(weather: WeatherState)
+    func stopActivityIndicator()
 }
 
 class WeatherModel {
@@ -74,4 +75,17 @@ class WeatherModel {
             delegate?.didLoadWeatherShowApiErrorAlert(title: "Error", message: error.message, action: confirmAction)
         }
     }
+    
+    func fetchAndHandleWeather() {
+        self.fetchWeather { result in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.delegate?.stopActivityIndicator()
+                self.handleWeather(result: result)
+            }
+        }
+    }
+    
 }

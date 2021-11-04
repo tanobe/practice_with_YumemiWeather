@@ -151,15 +151,7 @@ class WeatherViewController: UIViewController {
     
     private func loadWeather() {
         self.activityIndicator.startAnimating()
-        self.model.fetchWeather { result in
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.activityIndicator.stopAnimating()
-                self.model.handleWeather(result: result)
-            }
-        }
+        self.model.fetchAndHandleWeather()
     }
     
 }
@@ -179,5 +171,9 @@ extension WeatherViewController: WeatherViewDelegate {
     func didLoadWeatherUpdateTemp(weather: Weather) {
         maxTempLabel.text = String(weather.maxTemp)
         miniTempLabel.text = String(weather.minTemp)
+    }
+    
+    func stopActivityIndicator() {
+        self.activityIndicator.stopAnimating()
     }
 }
