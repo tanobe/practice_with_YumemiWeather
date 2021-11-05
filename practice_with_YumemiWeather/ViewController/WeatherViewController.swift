@@ -166,7 +166,7 @@ class WeatherViewController: UIViewController {
 }
 
 extension WeatherViewController: WeatherViewDelegate {
-    func didLoadWeatherShowApiErrorAlert(title: String, message: String, action: UIAlertAction) {
+    func handleWeatherFailuredShowApiErrorAlert(title: String, message: String, action: UIAlertAction) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(action)
         present(alert, animated: true)
@@ -177,7 +177,7 @@ extension WeatherViewController: WeatherViewDelegate {
         self.updateTemp(weather: weather)
     }
     
-    func stopActivityIndicator() {
+    func fetchAndHandleWeatherDidStopActivityIndicator() {
         self.activityIndicator.stopAnimating()
     }
 }
