@@ -154,6 +154,15 @@ class WeatherViewController: UIViewController {
         self.model.fetchAndHandleWeather()
     }
     
+    func updateTemp(weather: Weather) {
+        maxTempLabel.text = String(weather.maxTemp)
+        miniTempLabel.text = String(weather.minTemp)
+    }
+    
+    func updateWeatherImage(weather: WeatherState) {
+        imageView.image = weather.image
+        imageView.tintColor = weather.color
+    }
 }
 
 extension WeatherViewController: WeatherViewDelegate {
@@ -163,14 +172,9 @@ extension WeatherViewController: WeatherViewDelegate {
         present(alert, animated: true)
     }
     
-    func didLoadWeatherUpdateWeatherImage(weather: WeatherState) {
-        imageView.image = weather.image
-        imageView.tintColor = weather.color
-    }
-    
-    func didLoadWeatherUpdateTemp(weather: Weather) {
-        maxTempLabel.text = String(weather.maxTemp)
-        miniTempLabel.text = String(weather.minTemp)
+    func handleWeatherSuccessedUpdateWeatherImageAndTemp(weather: Weather) {
+        self.updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
+        self.updateTemp(weather: weather)
     }
     
     func stopActivityIndicator() {
