@@ -11,9 +11,9 @@ import YumemiWeather
 
 
 protocol WeatherViewDelegate: AnyObject {
-    func handleWeatherSuccessedUpdateWeatherImageAndTemp(weather: Weather)
-    func handleWeatherFailuredShowApiErrorAlert(title: String, message: String, action: UIAlertAction)
-    func fetchAndHandleWeatherDidStopActivityIndicator()
+    func fetchingWeatherSuccess(weather: Weather)
+    func fetchingWeatherFailur(title: String, message: String, action: UIAlertAction)
+    func fetchWeatherDid()
 }
 
 class WeatherModel {
@@ -67,10 +67,10 @@ class WeatherModel {
     func handleWeather(result: Result<Weather, WeatherError>) {
         switch result {
         case let .success(weather):
-            delegate?.handleWeatherSuccessedUpdateWeatherImageAndTemp(weather: weather)
+            delegate?.fetchingWeatherSuccess(weather: weather)
         case let .failure(error):
             let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
-            delegate?.handleWeatherFailuredShowApiErrorAlert(title: "Error", message: error.message, action: confirmAction)
+            delegate?.fetchingWeatherFailur(title: "Error", message: error.message, action: confirmAction)
         }
     }
     
@@ -80,7 +80,7 @@ class WeatherModel {
                 guard let self = self else {
                     return
                 }
-                self.delegate?.fetchAndHandleWeatherDidStopActivityIndicator()
+                self.delegate?.fetchWeatherDid()
                 self.handleWeather(result: result)
             }
         }
