@@ -15,7 +15,6 @@ class WeatherViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        model.delegate = self
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
                                                object: nil,
                                                queue: nil) { [weak self] _ in
@@ -157,51 +156,35 @@ class WeatherViewController: UIViewController {
                     return
                 }
                 self.activityIndicator.stopAnimating()
-                self.model.handleWeather(result: result)
+                self.handleWeather(result: result)
             }
         }
     }
     
-}
-
-extension WeatherViewController: WeatherViewDelegate {
-    func didFetchWeathershowApiErrorAlert(title: String, message: String, action: UIAlertAction) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(action)
-        present(alert, animated: true)
+    func handleWeather(result: Result<Weather, WeatherError>) {
+        switch result {
+        case let .success(weather):
+            updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
+            updateTemp(weather: weather)
+        case let .failure(error):
+            let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            showApiErrorAlert(title: "Error", message: error.message, action: confirmAction)
+        }
     }
     
-    func didFetchWeatherupdateWeatherImage(weather: WeatherState) {
+    func updateWeatherImage(weather: WeatherState) {
         imageView.image = weather.image
         imageView.tintColor = weather.color
     }
     
-    func didFetchWeatherUpdateTemp(weather: Weather) {
-        maxTempLabel.text = String(weather.maxTemp)
+    func updateTemp(weather: Weather) { maxTempLabel.text = String(weather.maxTemp)
         miniTempLabel.text = String(weather.minTemp)
+    }
+    
+    func showApiErrorAlert(title: String, message: String, action: UIAlertAction) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(action)
+        present(alert, animated: true)
     }
 }
 
-extension WeatherState {
-    var image: UIImage? {
-        switch self {
-        case .sunny:
-            return UIImage(named: "sunny")
-        case .cloudy:
-            return UIImage(named: "cloudy")
-        case .rainy:
-            return UIImage(named: "rainy")
-        }
-    }
-    
-    var color: UIColor {
-        switch self {
-        case .sunny:
-            return .orange
-        case .cloudy:
-            return .gray
-        case .rainy:
-            return .blue
-        }
-    }
-}
