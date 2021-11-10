@@ -151,7 +151,7 @@ class WeatherViewController: UIViewController {
     
     private func loadWeather() {
         activityIndicator.startAnimating()
-        self.model.fetchAndHandleWeather()
+        model.fetchAndHandleWeather()
     }
     
     func updateTemp(weather: Weather) {
