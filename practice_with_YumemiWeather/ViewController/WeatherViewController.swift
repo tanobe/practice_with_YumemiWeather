@@ -166,18 +166,18 @@ class WeatherViewController: UIViewController {
 }
 
 extension WeatherViewController: WeatherViewDelegate {
-    func fetchingWeatherFailur(title: String, message: String, action: UIAlertAction) {
+    func fetchingWeatherFailed(title: String, message: String, action: UIAlertAction) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(action)
         present(alert, animated: true)
     }
     
-    func fetchingWeatherSuccess(weather: Weather) {
+    func fetchingWeatherSuccessed(weather: Weather) {
         self.updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
         self.updateTemp(weather: weather)
     }
     
-    func fetchWeatherDid() {
+    func fetchingWeatherCompleted() {
         self.activityIndicator.stopAnimating()
     }
 }
