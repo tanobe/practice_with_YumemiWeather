@@ -150,7 +150,7 @@ class WeatherViewController: UIViewController {
     }
     
     private func loadWeather() {
-        self.activityIndicator.startAnimating()
+        activityIndicator.startAnimating()
         self.model.fetchAndHandleWeather()
     }
     
@@ -173,11 +173,11 @@ extension WeatherViewController: WeatherViewDelegate {
     }
     
     func fetchingWeatherSuccessed(weather: Weather) {
-        self.updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
-        self.updateTemp(weather: weather)
+        updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
+        updateTemp(weather: weather)
     }
     
     func fetchingWeatherCompleted() {
-        self.activityIndicator.stopAnimating()
+        activityIndicator.stopAnimating()
     }
 }

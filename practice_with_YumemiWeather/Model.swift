@@ -67,15 +67,15 @@ class WeatherModel {
     func handleWeather(result: Result<Weather, WeatherError>) {
         switch result {
         case let .success(weather):
-            delegate?.fetchingWeatherSuccessed(weather: weather)
+            self.delegate?.fetchingWeatherSuccessed(weather: weather)
         case let .failure(error):
             let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
-            delegate?.fetchingWeatherFailed(title: "Error", message: error.message, action: confirmAction)
+            self.delegate?.fetchingWeatherFailed(title: "Error", message: error.message, action: confirmAction)
         }
     }
     
     func fetchAndHandleWeather() {
-        self.fetchWeather { result in
+        fetchWeather { result in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else {
                     return
