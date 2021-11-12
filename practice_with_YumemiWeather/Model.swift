@@ -9,7 +9,17 @@ import Foundation
 import UIKit
 import YumemiWeather
 
+
+protocol WeatherViewDelegate: AnyObject {
+    func fetchingWeatherSuccessed(weather: Weather)
+    func fetchingWeatherFailed(title: String, message: String, action: UIAlertAction)
+    func fetchingWeatherCompleted()
+}
+
 class WeatherModel {
+  
+    weak var delegate: WeatherViewDelegate?
+  
     func fetchWeather(completion: @escaping (Result<Weather, WeatherError>) -> Void) {
         DispatchQueue.global().async {
             do {
@@ -51,6 +61,28 @@ class WeatherModel {
             throw WeatherError.decodeError
         }
         return jsonData
+    }
+    
+    func handleWeather(result: Result<Weather, WeatherError>) {
+        switch result {
+        case let .success(weather):
+            delegate?.fetchingWeatherSuccessed(weather: weather)
+        case let .failure(error):
+            let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            delegate?.fetchingWeatherFailed(title: "Error", message: error.message, action: confirmAction)
+        }
+    }
+    
+    func fetchAndHandleWeather() {
+        fetchWeather { result in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.delegate?.fetchingWeatherCompleted()
+                self.handleWeather(result: result)
+            }
+        }
     }
     
 }

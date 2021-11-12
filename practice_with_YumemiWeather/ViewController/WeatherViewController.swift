@@ -15,6 +15,7 @@ class WeatherViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
+        model.delegate = self
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
                                                object: nil,
                                                queue: nil) { [weak self] _ in
@@ -149,42 +150,35 @@ class WeatherViewController: UIViewController {
     }
     
     private func loadWeather() {
-        self.activityIndicator.startAnimating()
-        self.model.fetchWeather { result in
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.activityIndicator.stopAnimating()
-                self.handleWeather(result: result)
-            }
-        }
+        activityIndicator.startAnimating()
+        model.fetchAndHandleWeather()
     }
     
-    func handleWeather(result: Result<Weather, WeatherError>) {
-        switch result {
-        case let .success(weather):
-            updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
-            updateTemp(weather: weather)
-        case let .failure(error):
-            let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
-            showApiErrorAlert(title: "Error", message: error.message, action: confirmAction)
-        }
+    func updateTemp(weather: Weather) {
+        maxTempLabel.text = String(weather.maxTemp)
+        miniTempLabel.text = String(weather.minTemp)
     }
     
     func updateWeatherImage(weather: WeatherState) {
         imageView.image = weather.image
         imageView.tintColor = weather.color
     }
-    
-    func updateTemp(weather: Weather) { maxTempLabel.text = String(weather.maxTemp)
-        miniTempLabel.text = String(weather.minTemp)
-    }
-    
-    func showApiErrorAlert(title: String, message: String, action: UIAlertAction) {
+}
+
+extension WeatherViewController: WeatherViewDelegate {
+    func fetchingWeatherFailed(title: String, message: String, action: UIAlertAction) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(action)
         present(alert, animated: true)
+    }
+    
+    func fetchingWeatherSuccessed(weather: Weather) {
+        updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
+        updateTemp(weather: weather)
+    }
+    
+    func fetchingWeatherCompleted() {
+        activityIndicator.stopAnimating()
     }
 }
 
