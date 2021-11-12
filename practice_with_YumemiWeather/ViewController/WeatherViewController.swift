@@ -11,9 +11,32 @@ import YumemiWeather
 
 class WeatherViewController: UIViewController {
     
-    private let imageView: UIImageView = UIImageView()
+    var model = WeatherModel()
     
-    private let miniTempLabel: UILabel = {
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        model.delegate = self
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
+                                               object: nil,
+                                               queue: nil) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.loadWeather()
+        }
+    }
+    
+    deinit {
+        print(#function)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    let imageView: UIImageView = UIImageView()
+    
+    let miniTempLabel: UILabel = {
         let  label = UILabel()
         label.text = "--"
         label.textColor = .blue
@@ -22,7 +45,7 @@ class WeatherViewController: UIViewController {
         return label
     }()
     
-    private let maxTempLabel: UILabel = {
+    let maxTempLabel: UILabel = {
         let label = UILabel()
         label.text = "--"
         label.textColor = .red
@@ -31,7 +54,7 @@ class WeatherViewController: UIViewController {
         return label
     }()
     
-    private let reloadButton: UIButton = {
+    let reloadButton: UIButton = {
         let button = UIButton()
         button.setTitle("Reload", for: UIControl.State.normal)
         button.setTitleColor(UIColor .blue, for: .normal)
@@ -39,7 +62,7 @@ class WeatherViewController: UIViewController {
         return button
     }()
     
-    private let closeButton: UIButton = {
+    let closeButton: UIButton = {
         let button = UIButton()
         button.setTitle("Close", for: UIControl.State.normal)
         button.setTitleColor(UIColor .blue, for: .normal)
@@ -47,12 +70,13 @@ class WeatherViewController: UIViewController {
         return button
     }()
     
-    private let activityIndicator: UIActivityIndicatorView = {
+    let activityIndicator: UIActivityIndicatorView = {
         let inidecator = UIActivityIndicatorView()
         inidecator.style = .large
         inidecator.color = .purple
         return inidecator
     }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +85,7 @@ class WeatherViewController: UIViewController {
         view.backgroundColor = .white
         
         let container = UIView()
-
+        
         container.addSubview(imageView)
         container.addSubview(miniTempLabel)
         container.addSubview(maxTempLabel)
@@ -112,22 +136,6 @@ class WeatherViewController: UIViewController {
         
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
-                                               object: nil,
-                                               queue: nil) { [weak self] _ in
-            guard let self = self else {
-                return
-            }
-            self.loadWeather()
-        }
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         loadWeather()
@@ -141,115 +149,35 @@ class WeatherViewController: UIViewController {
         loadWeather()
     }
     
-    private func fetchWeather() -> Result<Weather, WeatherError> {
-        do {
-            guard let requestJson = try? request("tokyo", Date()) else {
-                return .failure(WeatherError.encodeError)
-            }
-            let weather = try YumemiWeather.syncFetchWeather(requestJson)
-            guard let response = try? response(from: weather) else {
-                return .failure(WeatherError.decodeError)
-            }
-            return .success(response)
-            
-        } catch YumemiWeatherError.invalidParameterError {
-            return .failure(.invalid)
-        } catch YumemiWeatherError.unknownError {
-            return .failure(.unknown)
-        } catch {
-            return .failure(.other)
-        }
-    }
-    
     private func loadWeather() {
-        self.activityIndicator.startAnimating()
-        DispatchQueue.global(priority: .default).async {
-            let fetchResult = self.fetchWeather()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.activityIndicator.stopAnimating()
-                self.handleWeather(result: fetchResult)
-            }
-        }
+        activityIndicator.startAnimating()
+        model.fetchAndHandleWeather()
     }
     
-    private func showApiErrorAlert(title: String, message: String, action: UIAlertAction) {
+    func updateTemp(weather: Weather) {
+        maxTempLabel.text = String(weather.maxTemp)
+        miniTempLabel.text = String(weather.minTemp)
+    }
+    
+    func updateWeatherImage(weather: WeatherState) {
+        imageView.image = weather.image
+        imageView.tintColor = weather.color
+    }
+}
+
+extension WeatherViewController: WeatherViewDelegate {
+    func fetchingWeatherFailed(title: String, message: String, action: UIAlertAction) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(action)
         present(alert, animated: true)
     }
     
-    private func updateWeatherImage(weather: WeatherState) {
-        imageView.image = weather.image
-        imageView.tintColor = weather.color
+    func fetchingWeatherSuccessed(weather: Weather) {
+        updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
+        updateTemp(weather: weather)
     }
     
-    private func updateTemp(weather: Weather) {
-        maxTempLabel.text = String(weather.maxTemp)
-        miniTempLabel.text = String(weather.minTemp)
-    }
-    
-    private func request(_ area: String, _ date: Date) throws -> String {
-        let request = Request(area: area, date: date)
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        guard let jsonValue = try? encoder.encode(request) else {
-            throw WeatherError.encodeError
-        }
-        let jsonString = String(data: jsonValue, encoding: .utf8)!
-        return jsonString
-    }
-    
-    private func response(from jsonString: String) throws -> Weather {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let json = jsonString.data(using: .utf8)!
-        guard let jsonData = try? decoder.decode(Weather.self,from: json) else {
-            throw WeatherError.decodeError
-        }
-        return jsonData
-    }
-    
-    private func handleWeather(result: Result<Weather, WeatherError>) {
-        switch result {
-        case let .success(weather):
-            updateWeatherImage(weather: WeatherState(rawValue: weather.weather)!)
-            updateTemp(weather: weather)
-        case let .failure(error):
-            let confirmAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
-            showApiErrorAlert(title: "Error", message: error.message, action: confirmAction)
-        }
-    }
-}
-
-enum WeatherState: String {
-    case sunny = "sunny"
-    case rainy = "rainy"
-    case cloudy = "cloudy"
-}
-
-extension WeatherState {
-    var image: UIImage? {
-        switch self {
-        case .sunny:
-            return UIImage(named: "sunny")
-        case .cloudy:
-            return UIImage(named: "cloudy")
-        case .rainy:
-            return UIImage(named: "rainy")
-        }
-    }
-    
-    var color: UIColor {
-        switch self {
-        case .sunny:
-            return .orange
-        case .cloudy:
-            return .gray
-        case .rainy:
-            return .blue
-        }
+    func fetchingWeatherCompleted() {
+        activityIndicator.stopAnimating()
     }
 }
