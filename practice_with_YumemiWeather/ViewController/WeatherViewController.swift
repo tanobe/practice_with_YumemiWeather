@@ -8,7 +8,6 @@
 import UIKit
 import YumemiWeather
 
-
 class WeatherViewController: UIViewController {
     
     var model = WeatherModel()
@@ -16,24 +15,14 @@ class WeatherViewController: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
         model.delegate = self
-//        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
-//                                               object: nil,
-//                                               queue: nil) { [weak self] _ in
-//            guard let self = self else {
-//                return
-//            }
-//            self.loadWeather()
-//        }
-        
-//        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
-//                                               object: nil,
-//                                               queue: nil) { [unowned self] notification in
-//            self.loadWeather()
-//        }
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(reloadButtonPushed),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
+                                               object: nil,
+                                               queue: nil) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.loadWeather()
+        }
     }
     
     deinit {
