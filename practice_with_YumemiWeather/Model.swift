@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 import YumemiWeather
 
-
 protocol WeatherViewDelegate: AnyObject {
     func fetchingWeatherSuccessed(weather: Weather)
     func fetchingWeatherFailed(title: String, message: String, action: UIAlertAction)
