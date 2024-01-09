@@ -9,7 +9,7 @@ protocol WeatherViewDelegate: AnyObject {
 }
 
 class WeatherModel {
-    
+
     weak var delegate: WeatherViewDelegate?
     
     func fetchWeather(completion: @escaping (Result<Weather, WeatherError>) -> Void) {
@@ -55,7 +55,6 @@ class WeatherModel {
         return jsonData
     }
     
-    
     func handleWeather(result: Result<Weather, WeatherError>) {
         switch result {
         case let .success(weather):
@@ -77,5 +76,4 @@ class WeatherModel {
             }
         }
     }
-    
 }
