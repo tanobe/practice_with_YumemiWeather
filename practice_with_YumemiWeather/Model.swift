@@ -1,10 +1,3 @@
-//
-//  s.swift
-//  practice_with_YumemiWeather
-//
-//  Created by Kai Tanobe on 2021/10/31.
-//
-
 import Foundation
 import UIKit
 import YumemiWeather
