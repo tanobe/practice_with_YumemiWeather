@@ -1,8 +1,8 @@
 name: Monthly issue metrics
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '45 10 * * *'
+  push:
+    branches:
+      - master
 
 permissions:
   issues: write
