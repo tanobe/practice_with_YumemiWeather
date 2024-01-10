@@ -19,8 +19,8 @@ jobs:
       - name: "Get current and past dates"
          id: date
          run: |
-            echo "::set-output name=current_date::$(date +"%d/%m/%Y")"
-            echo "::set-output name=past_date::$(date -d '2 weeks ago' +"%d/%m/%Y")"
+          echo "::set-output name=current_date::$(date +"%d/%m/%Y")"
+          echo "::set-output name=past_date::$(date -d '2 weeks ago' +"%d/%m/%Y")"
         shell: bash
 
       - name: "Run script for analytics"
