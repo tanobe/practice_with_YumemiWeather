@@ -31,7 +31,7 @@ jobs:
       uses: github/issue-metrics@v2
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SEARCH_QUERY: 'repo:tanobe/practice_with_YumemiWeather is:"issue pr" created:${{ env.last_week }} -reason:"not planned"'
+        SEARCH_QUERY: 'repo:tanobe/practice_with_YumemiWeather is:"issue pr" created:${{ env.last_week }}'
 
     - name: Create issue
       uses: peter-evans/create-issue-from-file@v4
