@@ -1,36 +1,37 @@
 name: "PR Analytics"
 on:
- push:
-  branches:
-   - master
- workflow_dispatch:
-  inputs:
-   report_date_start:
-    description: "Report date start(d/MM/yyyy)"
-    required: false
-   report_date_end:
-    description: "Report date end(d/MM/yyyy)"
-    required: false
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      report_date_start:
+        description: "Report date start(d/MM/yyyy)"
+        required: false
+      report_date_end:
+        description: "Report date end(d/MM/yyyy)"
+        required: false
 jobs:
- create-report:
-  name: "Create report"
-  runs-on: ubuntu-latest
-  steps:
-   - name: "Get current and past dates"
-     id: date
-     run: |
-      echo "::set-output name=current_date::$(date +'%d/%m/%Y')"
-      echo "::set-output name=past_date::$(date -d '2 weeks ago' +'%d/%m/%Y')"
-    shell: bash
-   - name: "Run script for analytics"
-    uses: AlexSim93/pull-request-analytics-action@master
-    with:
-     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     GITHUB_REPO_FOR_ISSUE: "practice_with_YumemiWeather"
-     GITHUB_OWNER_FOR_ISSUE: "tanobe"
-     GITHUB_OWNERS_REPOS: "tanobe/practice_with_YumemiWeather"
-     CORE_HOURS_START: "15:00"
-     CORE_HOURS_END: "16:00"
-     TIMEZONE: "Asia/Tokyo"
-     REPORT_DATE_START: ${{ inputs.report_date_start }}
-     REPORT_DATE_END: ${{ inputs.report_date_end }}
+  create-report:
+    name: "Create report"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Get current and past dates"
+        id: date
+        run: |
+         echo "::set-output name=current_date::$(date +"%d/%m/%Y")"
+         echo "::set-output name=past_date::$(date -d '2 weeks ago' +"%d/%m/%Y")"
+        shell: bash
+
+      - name: "Run script for analytics"
+        uses: AlexSim93/pull-request-analytics-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO_FOR_ISSUE: "practice_with_YumemiWeather"
+          GITHUB_OWNER_FOR_ISSUE: "tanobe"
+          GITHUB_OWNERS_REPOS: "tanobe/practice_with_YumemiWeather"
+          CORE_HOURS_START: "15:00"
+          CORE_HOURS_END: "16:00"
+          TIMEZONE: "Asia/Tokyo"
+          REPORT_DATE_START: ${{ inputs.report_date_start }}
+          REPORT_DATE_END: ${{ inputs.report_date_end }}
