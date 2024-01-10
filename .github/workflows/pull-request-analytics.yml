@@ -22,7 +22,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           GITHUB_REPO_FOR_ISSUE: "tanobe"
           GITHUB_OWNER_FOR_ISSUE: "practice_with_YumemiWeather"
-          GITHUB_OWNERS_REPOS: "tanobe/practice_with_YumemiWeather
+          GITHUB_OWNERS_REPOS: "tanobe/practice_with_YumemiWeather"
           CORE_HOURS_START: "15:00"
           CORE_HOURS_END: "16:00"
           TIMEZONE: "Asia/Tokyo"
