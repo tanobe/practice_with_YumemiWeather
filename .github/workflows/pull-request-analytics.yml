@@ -20,7 +20,7 @@ jobs:
         id: date
         run: |
          echo "::set-output name=current_date::$(date +"%d/%m/%Y")"
-         echo "::set-output name=past_date::$(date -d '2 weeks ago' +"%d/%m/%Y")"
+         echo "::set-output name=past_date::$(date -d '14 days ago' +"%d/%m/%Y")"
         shell: bash
 
       - name: "Run script for analytics"
@@ -33,5 +33,5 @@ jobs:
           CORE_HOURS_START: "15:00"
           CORE_HOURS_END: "16:00"
           TIMEZONE: "Asia/Tokyo"
-          REPORT_DATE_START: ${{ inputs.report_date_start }}
-          REPORT_DATE_END: ${{ inputs.report_date_end }}
+          REPORT_DATE_START: ${{ steps.date.outputs.past_date }}
+           REPORT_DATE_END: ${{ steps.date.outputs.current_date }}
