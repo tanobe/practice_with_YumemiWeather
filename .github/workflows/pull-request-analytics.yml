@@ -1,8 +1,8 @@
 name: "PR Analytics"
 on:
   push:
-  branches:
-   - master
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       report_date_start:
