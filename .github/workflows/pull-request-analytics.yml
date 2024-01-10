@@ -34,4 +34,4 @@ jobs:
           CORE_HOURS_END: "16:00"
           TIMEZONE: "Asia/Tokyo"
           REPORT_DATE_START: ${{ steps.date.outputs.past_date }}
-           REPORT_DATE_END: ${{ steps.date.outputs.current_date }}
+          REPORT_DATE_END: ${{ inputs.current_date }}
