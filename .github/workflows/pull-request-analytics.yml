@@ -1,7 +1,8 @@
 name: "PR Analytics"
 on:
-  schedule:
-    - cron:  '15 6 * * *'
+  push:
+  branches:
+   - master
   workflow_dispatch:
     inputs:
       report_date_start:
@@ -18,10 +19,10 @@ jobs:
       - name: "Run script for analytics"
         uses: AlexSim93/pull-request-analytics-action@master
         with:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          GITHUB_REPO_FOR_ISSUE: "repo"
-          GITHUB_OWNER_FOR_ISSUE: "owner"
-          GITHUB_OWNERS_REPOS: "owner-1/repo-1"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO_FOR_ISSUE: "tanobe"
+          GITHUB_OWNER_FOR_ISSUE: "practice_with_YumemiWeather"
+          GITHUB_OWNERS_REPOS: "tanobe/practice_with_YumemiWeather
           CORE_HOURS_START: "15:00"
           CORE_HOURS_END: "16:00"
           TIMEZONE: "Asia/Tokyo"
