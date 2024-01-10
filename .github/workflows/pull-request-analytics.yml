@@ -17,15 +17,15 @@ jobs:
     - name: Get dates for last month
       shell: bash
       run: |
-        # Calculate the day one month ago
-        first_day=$(date -d "-1 month" +%Y-%m-%d)
+        # Calculate the first day of the previous week
+        first_day=$(date -d "7 days ago" +%Y-%m-%d)
 
-        # Calculate the current day
-        last_day=$(date +%Y-%m-%d)
+        # Calculate the last day of the previous week
+        last_day=$(date -d "1 day ago" +%Y-%m-%d)
 
         # Set an environment variable with the date range
         echo "$first_day..$last_day"
-        echo "last_month=$first_day..$last_day" >> "$GITHUB_ENV"
+        echo "last_week=$first_day..$last_day" >> "$GITHUB_ENV"
 
     - name: Run issue-metrics tool
       uses: github/issue-metrics@v2
@@ -36,7 +36,7 @@ jobs:
     - name: Create issue
       uses: peter-evans/create-issue-from-file@v4
       with:
-        title: Monthly issue metrics report
+        title: Weekly issue metrics report
         token: ${{ secrets.GITHUB_TOKEN }}
         content-filepath: ./issue_metrics.md
         assignees: <YOUR_GITHUB_HANDLE_HERE>
