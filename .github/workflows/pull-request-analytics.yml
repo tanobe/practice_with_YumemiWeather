@@ -1,5 +1,7 @@
 name: "PR Analytics"
 on:
+  schedule:
+    - cron:  '15 6 * * *'
   workflow_dispatch:
     inputs:
       report_date_start:
