@@ -16,6 +16,13 @@ jobs:
     name: "Create report"
     runs-on: ubuntu-latest
     steps:
+      - name: "Get current and past dates"
+         id: date
+         run: |
+            echo "::set-output name=current_date::$(date +"%d/%m/%Y")"
+            echo "::set-output name=past_date::$(date -d '2 weeks ago' +"%d/%m/%Y")"
+        shell: bash
+
       - name: "Run script for analytics"
         uses: AlexSim93/pull-request-analytics-action@master
         with:
