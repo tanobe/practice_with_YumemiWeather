@@ -17,15 +17,15 @@ jobs:
     - name: Get dates for last month
       shell: bash
       run: |
-        # Calculate the first day of the previous month
-        first_day=$(date -d "last month" +%Y-%m-01)
+        # Calculate the day one month ago
+        first_day=$(date -d "-1 month" +%Y-%m-%d)
 
-        # Calculate the last day of the previous month
-        last_day=$(date -d "$first_day +1 month -1 day" +%Y-%m-%d)
+        # Calculate the current day
+        last_day=$(date +%Y-%m-%d)
 
-        #Set an environment variable with the date range
+        # Set an environment variable with the date range
         echo "$first_day..$last_day"
-         echo "last_month=$first_day..$last_day" >> "$GITHUB_ENV"
+        echo "last_month=$first_day..$last_day" >> "$GITHUB_ENV"
 
     - name: Run issue-metrics tool
       uses: github/issue-metrics@v2
