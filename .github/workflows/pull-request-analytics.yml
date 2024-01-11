@@ -16,12 +16,12 @@ jobs:
     name: "Create report"
     runs-on: ubuntu-latest
     steps:
-#      - name: "Get current and past dates"
-#        id: date
-#        run: |
-#         echo "::set-output name=current_date::$(date +"%d/%m/%Y")"
-#         echo "::set-output name=past_date::$(date -d '14 days ago' +"%d/%m/%Y")"
-#        shell: bash
+      - name: "Get current and past dates"
+        id: date
+        run: |
+         echo "::set-output name=current_date::$(date +"%d/%m/%Y")"
+         echo "::set-output name=past_date::$(date -d '14 days ago' +"%d/%m/%Y")"
+        shell: bash
 
       - name: "Run script for analytics"
         uses: AlexSim93/pull-request-analytics-action@master
@@ -35,7 +35,7 @@ jobs:
           CORE_HOURS_START: "10:00"
           CORE_HOURS_END: "21:00"
           TIMEZONE: "Asia/Tokyo"
-          INCLUDE_LABELS: "wip"
+          EXCLUDE_LABELS: "wip"
           # REPORT_DATE_START, REPORT_DATE_ENDは一旦調査のため変更
           REPORT_DATE_START: ${{ inputs.report_date_start  }}
           REPORT_DATE_END: ${{ inputs.report_date_end }}
