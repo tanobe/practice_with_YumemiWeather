@@ -31,8 +31,6 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SEARCH_QUERY: 'repo:tanobe/practice_with_YumemiWeather is:"pr" created:${{ env.last_week }}'
-        LABELS_TO_MEASURE: 'ready for review'
-        HIDE_TIME_TO_ANSWER: false
 
     - name: Create issue
       uses: peter-evans/create-issue-from-file@v4
@@ -40,4 +38,6 @@ jobs:
         title: issue metrics report
         token: ${{ secrets.GITHUB_TOKEN }}
         content-filepath: ./issue_metrics.md
-        assignees: tanobe, tanobe2
+        assignees: |
+          tanobe
+          tanobe2
