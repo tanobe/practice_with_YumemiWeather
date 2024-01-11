@@ -1,41 +1,41 @@
-name: "PR Analytics"
+name: pull-request-analytics
 on:
-  push:
-    branches:
-      - master
   workflow_dispatch:
-    inputs:
-      report_date_start:
-        description: "Report date start(d/MM/yyyy)"
-        required: false
-      report_date_end:
-        description: "Report date end(d/MM/yyyy)"
-        required: false
-jobs:
-  create-report:
-    name: "Create report"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Get current and past dates"
-        id: date
-        run: |
-         echo "::set-output name=current_date::$(date +"%d/%m/%Y")"
-         echo "::set-output name=past_date::$(date -d '14 days ago' +"%d/%m/%Y")"
-        shell: bash
+  schedule:
+    - cron: '30 1 * * 1'
 
-      - name: "Run script for analytics"
-        uses: AlexSim93/pull-request-analytics-action@master
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ASSIGNEES: "tanobe, tanobe2"
-          LABELS: "Report"
-          GITHUB_REPO_FOR_ISSUE: "practice_with_YumemiWeather"
-          GITHUB_OWNER_FOR_ISSUE: "tanobe"
-          GITHUB_OWNERS_REPOS: "tanobe/practice_with_YumemiWeather"
-          CORE_HOURS_START: "10:00"
-          CORE_HOURS_END: "21:00"
-          TIMEZONE: "Asia/Tokyo"
-          EXCLUDE_LABELS: "wip"
-          # REPORT_DATE_START, REPORT_DATE_ENDは一旦調査のため変更
-          REPORT_DATE_START: ${{ inputs.report_date_start  }}
-          REPORT_DATE_END: ${{ inputs.report_date_end }}
+permissions:
+  issues: write
+  pull-requests: read
+
+jobs:
+  build:
+    name: issue metrics
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get dates for last week
+      shell: bash
+      run: |
+        # Calculate the first day of the previous week
+        first_day=$(date -d "14 days ago" +%Y-%m-%d)
+
+        # Calculate the last day of the previous week
+        last_day=$(date -d "1 day ago" +%Y-%m-%d)
+
+        # Set an environment variable with the date range
+        echo "$first_day..$last_day"
+        echo "last_week=$first_day..$last_day" >> "$GITHUB_ENV"
+    - name: Run issue-metrics tool
+      uses: github/issue-metrics@v2
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SEARCH_QUERY: 'repo:tanobe/practice_with_YumemiWeather is:"pr" created:${{ env.last_week }}'
+
+    - name: Create issue
+      uses: peter-evans/create-issue-from-file@v4
+      with:
+        title: Weekly issue metrics report
+        token: ${{ secrets.GITHUB_TOKEN }}
+        content-filepath: ./issue_metrics.md
+        assignees: <YOUR_GITHUB_HANDLE_HERE>
