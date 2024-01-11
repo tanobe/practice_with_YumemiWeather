@@ -26,16 +26,21 @@ jobs:
         # Set an environment variable with the date range
         echo "$first_day..$last_day"
         echo "last_week=$first_day..$last_day" >> "$GITHUB_ENV"
+
     - name: Run issue-metrics tool
       uses: github/issue-metrics@v2
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SEARCH_QUERY: 'repo:tanobe/practice_with_YumemiWeather is:"pr" created:${{ env.last_week }}'
+        LABELS_TO_MEASURE: 'ready for review'
+        HIDE_TIME_TO_ANSWER: false
 
     - name: Create issue
       uses: peter-evans/create-issue-from-file@v4
       with:
-        title: Weekly issue metrics report
+        title: issue metrics report
         token: ${{ secrets.GITHUB_TOKEN }}
         content-filepath: ./issue_metrics.md
-        assignees: <YOUR_GITHUB_HANDLE_HERE>
+        assignees: |
+          tanobe
+          tanobe2
