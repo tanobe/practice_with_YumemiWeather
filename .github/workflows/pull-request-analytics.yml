@@ -38,6 +38,8 @@ jobs:
         title: issue metrics report
         token: ${{ secrets.GITHUB_TOKEN }}
         content-filepath: ./issue_metrics.md
+        LABELS_TO_MEASURE: 'ready for review'
+        HIDE_TIME_TO_ANSWER: false
         assignees: |
           tanobe
           tanobe2
