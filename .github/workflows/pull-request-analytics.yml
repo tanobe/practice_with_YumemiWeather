@@ -28,11 +28,14 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ASSIGNEES: "tanobe, tanobe2"
+          LABELS: "Report"
           GITHUB_REPO_FOR_ISSUE: "practice_with_YumemiWeather"
           GITHUB_OWNER_FOR_ISSUE: "tanobe"
           GITHUB_OWNERS_REPOS: "tanobe/practice_with_YumemiWeather"
-          CORE_HOURS_START: "15:00"
-          CORE_HOURS_END: "16:00"
+          CORE_HOURS_START: "10:00"
+          CORE_HOURS_END: "21:00"
           TIMEZONE: "Asia/Tokyo"
-          REPORT_DATE_START: ${{ steps.date.outputs.past_date }}
-          REPORT_DATE_END: ${{ inputs.current_date }}
+          INCLUDE_LABELS: "wip"
+          # REPORT_DATE_START, REPORT_DATE_ENDは一旦調査のため変更
+          REPORT_DATE_START: ${{ inputs.report_date_start  }}
+          REPORT_DATE_END: ${{ inputs.report_date_end }}
