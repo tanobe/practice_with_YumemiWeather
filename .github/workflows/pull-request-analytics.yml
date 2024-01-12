@@ -2,6 +2,7 @@ name: pull-request-analytics
 on:
   workflow_dispatch:
   schedule:
+    # UTCの1:30は日本時間の10:30、スケジュール自体は毎週月曜日に設定
     - cron: '30 1 * * 1'
 
 permissions:
@@ -25,6 +26,17 @@ jobs:
 
         # Set an environment variable with the date range
         echo "last_week=$first_day..$last_day" >> "$GITHUB_ENV"
+
+    # 週番号で、偶数なら成功して終了させる
+    - name: Check if its time to run
+      shell: bash
+      run: |
+        # Get the current week number
+        week_number=$(date +%V)
+        # If the week number is even, exit the job
+        if (( week_number % 2 == 0 )); then
+          exit 0
+        fi
 
     - name: Run issue-metrics tool
       uses: github/issue-metrics@v2
